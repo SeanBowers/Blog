@@ -14,7 +14,7 @@ namespace Blog.Models
         public string? AuthorId { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime? Created { get; set; }
+        public DateTime Created { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime? Updated { get; set; }

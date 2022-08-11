@@ -12,12 +12,21 @@ namespace Blog.Data
         private const string _adminRole = "Administrator";
         private const string _modRole = "Moderator";
 
+        //Format dates into
+        public static DateTime GetPostGresDate(DateTime dateTime)
+        {
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+        }
+
+        //Connection string, local or Heroku
         public static string GetConnectionString(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
             return string.IsNullOrEmpty(databaseUrl) ? connectionString : BuildConnectionString(databaseUrl);
         }
+
+        //If Heroku, use this builder
         private static string BuildConnectionString(string databaseUrl)
         {
             var databaseUri = new Uri(databaseUrl);
@@ -41,6 +50,8 @@ namespace Blog.Data
             //Migration: This is the programmatic equivalent to update-database.
             await dbContextSvc.Database.MigrateAsync();
 
+            var configurationSvc = svcProvider.GetRequiredService<IConfiguration>();
+
             //Serivce: An instance of RoleManager.
             var roleManagerSvc = svcProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -50,7 +61,7 @@ namespace Blog.Data
             //Seed Roles
             await SeedRolesAsync(roleManagerSvc);
             //Seed Users
-            await SeedUsersAsync(dbContextSvc, userManagerSvc);
+            await SeedUsersAsync(dbContextSvc, configurationSvc, userManagerSvc);
 
         }
 
@@ -67,7 +78,7 @@ namespace Blog.Data
                 await roleManager.CreateAsync(new IdentityRole(_modRole));
             }
         }
-        private static async Task SeedUsersAsync(ApplicationDbContext context, UserManager<BlogUser> userManager)
+        private static async Task SeedUsersAsync(ApplicationDbContext context, IConfiguration configuration, UserManager<BlogUser> userManager)
         {
             if (!context.Users.Any(u => u.Email == _adminEmail))
             {
@@ -80,7 +91,7 @@ namespace Blog.Data
                     PhoneNumber = "7574038968",
                     EmailConfirmed = true
                 };
-                await userManager.CreateAsync(adminUser, "1qaz2wsx#EDC$RFV");
+                await userManager.CreateAsync(adminUser, configuration["AdminPwd"]);
                 await userManager.AddToRoleAsync(adminUser, _adminRole);
             }
             if (!context.Users.Any(u => u.Email == _modEmail))
@@ -94,7 +105,7 @@ namespace Blog.Data
                     PhoneNumber = "7574038968",
                     EmailConfirmed = true
                 };
-                await userManager.CreateAsync(modUser, "1qaz2wsx#EDC$RFV");
+                await userManager.CreateAsync(modUser, configuration["ModeratorPwd"]);
                 await userManager.AddToRoleAsync(modUser, _modRole);
             }
         }

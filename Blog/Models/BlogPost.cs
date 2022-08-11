@@ -1,4 +1,5 @@
 ﻿using Blog.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,15 +18,13 @@ namespace Blog.Models
         public string? Content { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime? Created { get; set; }
+        public DateTime Created { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime? Updated { get; set; }
 
         //Foreign Key
         public int CategoryId { get; set; }
-
-        public BlogPostStatus BlogPostStatus { get; set; }
 
         //Slug to mask the url
         public string? Slug { get; set; }
@@ -34,6 +33,9 @@ namespace Blog.Models
         public string? Abstract { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        [DisplayName("Published")]
+        public bool IsPublished { get; set; }
 
         //Properties for storing image - user avatar.
         public byte[]? ImageData { get; set; }

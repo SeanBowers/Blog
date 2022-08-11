@@ -33,9 +33,6 @@ namespace Blog.Data.Migrations
                     b.Property<string>("Abstract")
                         .HasColumnType("text");
 
-                    b.Property<int>("BlogPostStatus")
-                        .HasColumnType("integer");
-
                     b.Property<string>("BlogUserId")
                         .HasColumnType("text");
 
@@ -46,7 +43,7 @@ namespace Blog.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<byte[]>("ImageData")
@@ -56,6 +53,9 @@ namespace Blog.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPublished")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Slug")
@@ -211,7 +211,7 @@ namespace Blog.Data.Migrations
                         .HasMaxLength(5000)
                         .HasColumnType("character varying(5000)");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdateReason")
