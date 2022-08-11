@@ -101,7 +101,7 @@ namespace Blog.Services
                 string newSlug = title.Slugify();
                 if(blogId == 0)
                 {
-                    return await (_context.BlogPosts.AnyAsync(b => b.Slug == newSlug));
+                    return !(await _context.BlogPosts.AnyAsync(b => b.Slug == newSlug));
                 }
                 else
                 {

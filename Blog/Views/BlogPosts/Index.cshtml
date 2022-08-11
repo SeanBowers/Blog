@@ -22,26 +22,28 @@
                 @Html.DisplayNameFor(model => model.Content)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Abstract)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Created)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Updated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsPublished)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Slug)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Abstract)
+                @Html.DisplayNameFor(model => model.IsPublished)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IsDeleted)
             </th>
-
             <th>
                 Image
+            </th>
+            <th>
+                Tags
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Category)
@@ -59,19 +61,19 @@
                 @Html.DisplayFor(modelItem => item.Content)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Abstract)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Created)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Updated)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsPublished)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Slug)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Abstract)
+                @Html.DisplayFor(modelItem => item.IsPublished)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsDeleted)
@@ -82,7 +84,14 @@
                 </div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
+                @*Can see tags because they are included on index get.*@
+                    @foreach(Tag tag in item.Tags)
+                    {
+                        <p>@tag.Name</p>
+                    }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category!.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
