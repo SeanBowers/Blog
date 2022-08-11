@@ -80,6 +80,10 @@
         {
             <p>@tag.Name</p>
         }
+        @foreach (Comment comment in Model.Comments)
+        {
+            <p>@comment.Author.FirstName @comment.Author.LastName : @comment.Body</p>
+        }
     </dl>
 </div>
 <div>

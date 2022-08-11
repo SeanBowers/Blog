@@ -59,6 +59,8 @@ namespace Blog.Controllers
             var blogPost = await _context.BlogPosts
                 .Include(b => b.Category)
                 .Include(b => b.Tags)
+                .Include(b => b.Comments)
+                .ThenInclude(b => b.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (blogPost == null)
             {
@@ -107,17 +109,17 @@ namespace Blog.Controllers
 
                 _context.Add(blogPost);
 
-                foreach (int tagId in TagId)
-                {
-                    blogPost.Tags.Add(_context.Tags.Find(tagId)!);
-                }
+                //foreach (int tagId in TagId)
+                //{
+                //    blogPost.Tags.Add(_context.Tags.Find(tagId)!);
+                //}
 
                 await _context.SaveChangesAsync();
 
-                //foreach (int tagId in TagId)
-                //{
-                //    await _blogService.AddBlogToTagAsync(tagId, blogPost.Id);
-                //}
+                foreach (int tagId in TagId)
+                {
+                    await _blogService.AddBlogToTagAsync(tagId, blogPost.Id);
+                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -138,7 +140,6 @@ namespace Blog.Controllers
                 return NotFound();
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", blogPost.CategoryId);
-            //ViewData["TagId"] = new MultiSelectList(_context.Tags, "Id", "Name", await _blogService.GetBlogTagsAsync(blogPost.Id));
             ViewData["TagId"] = new MultiSelectList(_context.Tags, "Id", "Name", blogPost.Tags.Select(t => t.Id));
 
             return View(blogPost);
@@ -172,22 +173,27 @@ namespace Blog.Controllers
 
                     _context.Update(blogPost);
 
-                    //List<Tag> oldTags = (await _blogService.GetBlogTagsAsync(blogPost.Id)).ToList();
-                    //foreach (Tag tag in oldTags)
-                    //{
-                    //    await _blogService.RemoveBlogFromTagAsync(tag.Id, blogPost.Id);
-                    //}
-
-                    //foreach (int tagId in TagId)
-                    //{
-                    //    await _blogService.AddBlogToTagAsync(tagId, blogPost.Id);
-                    //}
-                    blogPost.Tags.Clear();
+                    List<Tag> oldTags = (await _blogService.GetBlogTagsAsync(blogPost.Id)).ToList();
+                    foreach (Tag tag in oldTags)
+                    {
+                        await _blogService.RemoveBlogFromTagAsync(tag.Id, blogPost.Id);
+                    }
 
                     foreach (int tagId in TagId)
                     {
-                        blogPost.Tags.Add(_context.Tags.Find(tagId)!);
+                        await _blogService.AddBlogToTagAsync(tagId, blogPost.Id);
                     }
+                    //blogPost.Tags.Clear();
+
+                    //List<Tag> oldTags = _context.Tags!.Where(t => t.BlogPosts.Contains(blogPost)).ToList();
+                    //foreach (Tag tag in oldTags)
+                    //{
+                    //    blogPost.Tags.Remove(tag);
+                    //}
+                    //foreach (int tag in TagId)
+                    //{
+                    //    blogPost.Tags.Add(_context.Tags!.Find(tag)!);
+                    //}
 
                     await _context.SaveChangesAsync();
                 }

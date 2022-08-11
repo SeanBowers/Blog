@@ -63,6 +63,7 @@ namespace Blog.Controllers
         {
             if (ModelState.IsValid)
             {
+                comment.Created = DataUtility.GetPostGresDate(DateTime.Now);
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
