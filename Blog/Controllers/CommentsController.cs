@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Blog.Data;
 using Blog.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Blog.Controllers
 {
     public class CommentsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<BlogUser> _userManager;
 
-        public CommentsController(ApplicationDbContext context)
+        public CommentsController(ApplicationDbContext context, UserManager<BlogUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Comments
@@ -50,7 +53,7 @@ namespace Blog.Controllers
         public IActionResult Create()
         {
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["BlogPostId"] = new SelectList(_context.BlogPosts, "Id", "Content");
+            ViewData["BlogPostId"] = new SelectList(_context.BlogPosts, "Id", "Title");
             return View();
         }
 
@@ -59,18 +62,17 @@ namespace Blog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BlogPostId,AuthorId,Created,Updated,UpdateReason,Body")] Comment comment)
+        public async Task<IActionResult> Create([Bind("Id,BlogPostId,AuthorId,Created,Updated,UpdateReason,Body")] Comment comment, string? slug)
         {
+            ModelState.Remove("AuthorId");
             if (ModelState.IsValid)
             {
                 comment.Created = DataUtility.GetPostGresDate(DateTime.Now);
+                comment.AuthorId = _userManager.GetUserId(User);
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", comment.AuthorId);
-            ViewData["BlogPostId"] = new SelectList(_context.BlogPosts, "Id", "Content", comment.BlogPostId);
-            return View(comment);
+            return RedirectToAction("Details", "BlogPosts", new { slug });
         }
 
         // GET: Comments/Edit/5
@@ -87,7 +89,7 @@ namespace Blog.Controllers
                 return NotFound();
             }
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", comment.AuthorId);
-            ViewData["BlogPostId"] = new SelectList(_context.BlogPosts, "Id", "Content", comment.BlogPostId);
+            ViewData["BlogPostId"] = new SelectList(_context.BlogPosts, "Id", "Title", comment.BlogPostId);
             return View(comment);
         }
 
@@ -124,7 +126,7 @@ namespace Blog.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", comment.AuthorId);
-            ViewData["BlogPostId"] = new SelectList(_context.BlogPosts, "Id", "Content", comment.BlogPostId);
+            ViewData["BlogPostId"] = new SelectList(_context.BlogPosts, "Id", "Title", comment.BlogPostId);
             return View(comment);
         }
 
@@ -162,14 +164,14 @@ namespace Blog.Controllers
             {
                 _context.Comments.Remove(comment);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CommentExists(int id)
         {
-          return (_context.Comments?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Comments?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

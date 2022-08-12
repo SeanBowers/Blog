@@ -1,7 +1,12 @@
-﻿@model Blog.Models.BlogPost
-
+﻿@using Blog.Services
+@model Blog.Models.BlogPost
+@using Blog.Services.Interfaces
+@using Microsoft.AspNetCore.Identity
+@inject IImageService ImageService
+@inject SignInManager<BlogUser> _SignInManager
 @{
     ViewData["Title"] = "Details";
+    
 }
 
 <h1>Details</h1>
@@ -10,6 +15,12 @@
     <h4>BlogPost</h4>
     <hr />
     <dl class="row">
+        <dt class = "col-sm-2">
+            Image
+        </dt>
+        <dd class = "col-sm-10">
+        <img class="img-fluid img-thumbnail" style="width:100px; height:80px" src="@ImageService.ConvertByteArrayToFile(Model.ImageData, Model.ImageType!)" id="imageData">
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
@@ -21,6 +32,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Content)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Abstract)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Abstract)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Created)
@@ -35,54 +52,46 @@
             @Html.DisplayFor(model => model.Updated)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsPublished)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsPublished)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Slug)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Slug)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Abstract)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Abstract)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsDeleted)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsDeleted)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageData)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageData)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageType)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Category.Name)
         </dd>
+
+        <label>@Model.Tags.Count Tag(s)</label>
         @foreach (Tag tag in Model.Tags)
         {
             <p>@tag.Name</p>
         }
+        @if (_SignInManager.IsSignedIn(User))
+        {
+        <form asp-action="Create" asp-controller="Comments" method="POST">
+            <input type="hidden" asp-for="Id" name="BlogPostId"/>
+            <input type="hidden" asp-for="Slug"/>
+            <div class="form-group">
+                <label class="control-label">Add a Comment</label>
+                <textarea name="Body" class="form-control" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            </form>
+        }
+        else
+        {
+            <a class="text-dark btn btn-danger" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Action("Details","BlogPost", new { Model.Slug})">Login To Leave A Comment</a>
+        }
+
+        <label>@Model.Comments.Count Comments</label>
         @foreach (Comment comment in Model.Comments)
         {
-            <p>@comment.Author.FirstName @comment.Author.LastName : @comment.Body</p>
+            <p>@comment.Created.ToString("MMM dd, yyyy") - @comment.Author.FullName
+            <br>
+            @comment.Body
+            </p>
+            <hr>
+            @*<p>@comment.Created.ToShortDateString() - @comment.Author.FirstName @comment.Author.LastName: @comment.Body</p>*@
+            @*<p>@comment.Created.ToString("MM-dd-yy hh:mm:ss tt") - @comment.Author.FirstName @comment.Author.LastName: @comment.Body</p>*@
         }
     </dl>
 </div>
