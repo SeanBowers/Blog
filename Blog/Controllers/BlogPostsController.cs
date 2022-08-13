@@ -43,7 +43,6 @@ namespace Blog.Controllers
                 .ToListAsync();
 
             return View(blogPosts);
-
         }
 
         // GET: BlogPosts/Details/5

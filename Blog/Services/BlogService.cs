@@ -87,7 +87,7 @@ namespace Blog.Services
             BlogPost? blog = await _context.BlogPosts.FindAsync(blogId);
             Tag? tag = await _context.Tags.FindAsync(tagId);
 
-            if(tag != null && blog != null)
+            if (tag != null && blog != null)
             {
                 tag.BlogPosts.Remove(blog);
                 await _context.SaveChangesAsync();
@@ -99,7 +99,7 @@ namespace Blog.Services
             try
             {
                 string newSlug = title.Slugify();
-                if(blogId == 0)
+                if (blogId == 0)
                 {
                     return !(await _context.BlogPosts.AnyAsync(b => b.Slug == newSlug));
                 }
@@ -109,7 +109,7 @@ namespace Blog.Services
 
                     string oldSlug = blogPost.Slug!;
 
-                    if(!string.Equals(oldSlug, newSlug))
+                    if (!string.Equals(oldSlug, newSlug))
                     {
                         return !(await _context.BlogPosts.AnyAsync(b => b.Slug == newSlug));
                     }
@@ -122,6 +122,57 @@ namespace Blog.Services
                 throw;
             }
         }
+
+        public async Task<List<Category>> GetCategoriesAsync()
+        {
+            try
+            {
+                List<Category> categories = await _context.Categories!.ToListAsync();
+                return categories;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<BlogPost>> GetAllBlogPostsAsync()
+        {
+            try
+            {
+                List<BlogPost> blogPosts = await _context.BlogPosts!.ToListAsync();
+                return blogPosts;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<BlogPost>> GetPopularBlogPostsAsync(int count)
+        {
+            try
+            {
+                List<BlogPost> blogPosts = await _context.BlogPosts!.Include(b => b.Comments).OrderByDescending(b => b.Comments.Count).Take(count).ToListAsync();
+                return blogPosts;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<BlogPost>> GetRecentBlogPostsAsync(int count)
+        {
+            try
+            {
+                List<BlogPost> blogPosts = await _context.BlogPosts!.OrderByDescending(b => b.Created).Take(count).ToListAsync();
+                return blogPosts;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
- 

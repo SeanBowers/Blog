@@ -13,7 +13,9 @@ var connectionString = DataUtility.GetConnectionString(builder.Configuration);
 
 //Establish the connection to db - useNpgsql since we are using postgres
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString,
+    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+    ));
 
 //Push errors to browser.
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
