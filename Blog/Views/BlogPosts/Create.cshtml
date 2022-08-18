@@ -3,83 +3,89 @@
 @{
     ViewData["Title"] = "Create";
 }
-<h1>Create</h1>
+<div class="axil-post-list-area axil-section-gap bg-color-white">
+    <div class="container">
+        <div class="row">
+            <h1>Create</h1>
 
-<h4>BlogPost</h4>
-<hr />
-<div class="row">
-    <div class="col-4 col-md-6">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="square-img-container">
-                <img class="img-fluid img-thumbnail" style="width:100px; height:80px" src="/img/DefaultBlogImage.png" id="imageData">
-            </div>
-            <div>
-                <label asp-for="BlogPostImg" class="control-label"></label>
-                <input type="file" asp-for="BlogPostImg" class="form-control" accept=".png,.jpg,.jpeg,.gif"
-                       onchange="document.getElementById('imageData').src = window.URL.createObjectURL(this.files[0])" />
-                <span asp-validation-for="BlogPostImg" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Abstract" class="control-label"></label>
-                <input asp-for="Abstract" class="form-control" />
-                <span asp-validation-for="Abstract" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <textarea asp-for="Content" class="form-control" rowls="7"></textarea>
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <select name="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tags" class="control-label"></label>
-                <select name="TagId" class="form-control" asp-items="ViewBag.TagId" multiple></select>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input asp-for="IsPublished" class="form-check-input" /> @Html.DisplayNameFor(model => model.IsPublished)
-                </label>
-            </div>
+            <h4>BlogPost</h4>
+            <hr />
 
-            @*<div class="form-group form-check">
-            <label class="form-check-label">
-            <input asp-for="IsDeleted" class="form-check-input"/> @Html.DisplayNameFor(model => model.IsDeleted)
-            </label>
-            </div>*@
-            @*<div class="form-group">
-            <label asp-for="Created" class="control-label"></label>
-            <input asp-for="Created" class="form-control" />
-            <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-            <label asp-for="Updated" class="control-label"></label>
-            <input asp-for="Updated" class="form-control" />
-            <span asp-validation-for="Updated" class="text-danger"></span>
-            </div>*@
-            @*<div class="form-group">
-            <label asp-for="Slug" class="control-label"></label>
-            <input asp-for="Slug" class="form-control" />
-            <span asp-validation-for="Slug" class="text-danger"></span>
-            </div>*@
+            <div class="col">
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="square-img-container">
+                        <img class="img-fluid img-thumbnail" style="width:100px; height:80px" src="/img/DefaultBlogImage.png" id="imageData">
+                    </div>
+                    <div>
+                        <label asp-for="BlogPostImg" class="control-label"></label>
+                        <input type="file" asp-for="BlogPostImg" class="form-control" accept=".png,.jpg,.jpeg,.gif"
+                               onchange="document.getElementById('imageData').src = window.URL.createObjectURL(this.files[0])" />
+                        <span asp-validation-for="BlogPostImg" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Abstract" class="control-label"></label>
+                        <input asp-for="Abstract" class="form-control" />
+                        <span asp-validation-for="Abstract" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Content" class="control-label"></label>
+                        <textarea asp-for="Content" class="form-control" rowls="7"></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Category" class="control-label"></label>
+                        <select name="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Tags" class="control-label"></label>
+                        <select name="TagId" class="form-control" asp-items="ViewBag.TagId" multiple></select>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label" for="IsPublished">
+                        <input asp-for="IsPublished" class="form-check-input"/>Published
+                        </label>
+                    </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                    @*<div class="form-group form-check">
+                    <label class="form-check-label">
+                    <input asp-for="IsDeleted" class="form-check-input"/> @Html.DisplayNameFor(model => model.IsDeleted)
+                    </label>
+                    </div>*@
+                    @*<div class="form-group">
+                    <label asp-for="Created" class="control-label"></label>
+                    <input asp-for="Created" class="form-control" />
+                    <span asp-validation-for="Created" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                    <label asp-for="Updated" class="control-label"></label>
+                    <input asp-for="Updated" class="form-control" />
+                    <span asp-validation-for="Updated" class="text-danger"></span>
+                    </div>*@
+                    @*<div class="form-group">
+                    <label asp-for="Slug" class="control-label"></label>
+                    <input asp-for="Slug" class="form-control" />
+                    <span asp-validation-for="Slug" class="text-danger"></span>
+                    </div>*@
+
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{

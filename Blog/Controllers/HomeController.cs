@@ -3,6 +3,7 @@ using Blog.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using X.PagedList;
 
 namespace Blog.Controllers
 {
@@ -16,18 +17,24 @@ namespace Blog.Controllers
             _logger = logger;
             _context = context;
         }
-        public async Task<IActionResult> AuthorPage()
+        public async Task<IActionResult> AuthorPage(int? page)
         {
             //TODO: Create Service to get blogposts
-            List<BlogPost> blogPosts = await _context.BlogPosts
+            var blogPosts = await _context.BlogPosts
                 .Include(b => b.Category)
                 .Include(b => b.Tags)
                 .Include(b => b.Comments)
                 .ThenInclude(b => b.Author)
                 .ToListAsync();
 
+            var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
+            var onePageOfBlogPosts = blogPosts.ToPagedList(pageNumber, 5); // will only contain 25 products max because of the pageSize
+
+            ViewBag.OnePageOfBlogPosts = onePageOfBlogPosts;
+
             return View(blogPosts);
         }
+        
         public IActionResult Index()
         {
             return View();

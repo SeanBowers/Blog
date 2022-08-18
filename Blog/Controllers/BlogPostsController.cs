@@ -11,6 +11,7 @@ using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Blog.Extensions;
+using X.PagedList;
 
 namespace Blog.Controllers
 {
@@ -41,6 +42,17 @@ namespace Blog.Controllers
                 .Include(b => b.Category)
                 .Include(b => b.Tags)
                 .ToListAsync();
+
+            return View(blogPosts);
+        }
+        public async Task<IActionResult> SearchIndex(string searchString, int? pageNum)
+        {
+            int pageSize = 5;
+            int page = pageNum ?? 1;
+
+            ViewData["SearchTerm"] = searchString;
+
+            IPagedList<BlogPost> blogPosts = await _blogService.Search(searchString).ToPagedListAsync(page, pageSize);
 
             return View(blogPosts);
         }

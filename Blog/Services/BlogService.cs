@@ -20,8 +20,8 @@ namespace Blog.Services
             {
                 if (!await IsBlogInTag(tagId, blogId))
                 {
-                    BlogPost? blog = await _context.BlogPosts.FindAsync(blogId);
-                    Tag? tag = await _context.Tags.FindAsync(tagId);
+                    BlogPost? blog = await _context.BlogPosts!.FindAsync(blogId);
+                    Tag? tag = await _context.Tags!.FindAsync(tagId);
 
                     if (blog != null && tag != null)
                     {
@@ -69,9 +69,9 @@ namespace Blog.Services
         {
             try
             {
-                BlogPost? blog = await _context.BlogPosts.FindAsync(blogId);
+                BlogPost? blog = await _context.BlogPosts!.FindAsync(blogId);
 
-                return await _context.Tags
+                return await _context.Tags!
                     .Include(b => b.BlogPosts)
                     .Where(t => t.Id == tagId && t.BlogPosts.Contains(blog))
                     .AnyAsync();
@@ -84,8 +84,8 @@ namespace Blog.Services
 
         public async Task RemoveBlogFromTagAsync(int tagId, int blogId)
         {
-            BlogPost? blog = await _context.BlogPosts.FindAsync(blogId);
-            Tag? tag = await _context.Tags.FindAsync(tagId);
+            BlogPost? blog = await _context.BlogPosts!.FindAsync(blogId);
+            Tag? tag = await _context.Tags!.FindAsync(tagId);
 
             if (tag != null && blog != null)
             {
@@ -101,17 +101,17 @@ namespace Blog.Services
                 string newSlug = title.Slugify();
                 if (blogId == 0)
                 {
-                    return !(await _context.BlogPosts.AnyAsync(b => b.Slug == newSlug));
+                    return !(await _context.BlogPosts!.AnyAsync(b => b.Slug == newSlug));
                 }
                 else
                 {
-                    BlogPost blogPost = await _context.BlogPosts.AsNoTracking().FirstAsync(b => b.Id == blogId);
+                    BlogPost blogPost = await _context.BlogPosts!.AsNoTracking().FirstAsync(b => b.Id == blogId);
 
                     string oldSlug = blogPost.Slug!;
 
                     if (!string.Equals(oldSlug, newSlug))
                     {
-                        return !(await _context.BlogPosts.AnyAsync(b => b.Slug == newSlug));
+                        return !(await _context.BlogPosts!.AnyAsync(b => b.Slug == newSlug));
                     }
                 }
                 return true;
@@ -127,8 +127,18 @@ namespace Blog.Services
         {
             try
             {
-                List<Category> categories = await _context.Categories!.ToListAsync();
-                return categories;
+                return await _context.Categories!.Include(c => c.BlogPosts).ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<List<Tag>> GetTagsAsync(int count)
+        {
+            try
+            {
+                return await _context.Tags!.Include(c => c.BlogPosts).OrderByDescending(b => b.BlogPosts.Count).Take(count).ToListAsync();
             }
             catch (Exception)
             {
@@ -140,8 +150,12 @@ namespace Blog.Services
         {
             try
             {
-                List<BlogPost> blogPosts = await _context.BlogPosts!.ToListAsync();
-                return blogPosts;
+                return await _context.BlogPosts!
+                    .Include(b => b.Comments)
+                        .ThenInclude(b => b.Author)
+                    .Include(b => b.Tags)
+                    .Include(b => b.Category)
+                    .ToListAsync();
             }
             catch (Exception)
             {
@@ -153,8 +167,14 @@ namespace Blog.Services
         {
             try
             {
-                List<BlogPost> blogPosts = await _context.BlogPosts!.Include(b => b.Comments).OrderByDescending(b => b.Comments.Count).Take(count).ToListAsync();
-                return blogPosts;
+                return await _context.BlogPosts!
+                    .Include(b => b.Comments)
+                        .ThenInclude(b => b.Author)
+                    .Include(b => b.Tags)
+                    .Include(b => b.Category)
+                    .OrderByDescending(b => b.Comments.Count)
+                    .Take(count)
+                    .ToListAsync();
             }
             catch (Exception)
             {
@@ -166,13 +186,78 @@ namespace Blog.Services
         {
             try
             {
-                List<BlogPost> blogPosts = await _context.BlogPosts!.OrderByDescending(b => b.Created).Take(count).ToListAsync();
-                return blogPosts;
+                return await _context.BlogPosts!
+                    .Include(b => b.Comments)
+                        .ThenInclude(b => b.Author)
+                    .Include(b => b.Tags)
+                    .Include(b => b.Category)
+                    .OrderByDescending(b => b.Created)
+                    .Take(count)
+                    .ToListAsync();
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+        public async Task<List<BlogPost>> GetBlogPostsInCategoryAsync(int id)
+        {
+            try
+            {
+                return await _context.BlogPosts!
+                    .Include(b => b.Comments)
+                        .ThenInclude(b => b.Author)
+                    .Include(b => b.Tags)
+                    .Include(b => b.Category)
+                    .Where(b => b.CategoryId == id)
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public IEnumerable<BlogPost> Search(string searchString)
+        {
+            try
+            {
+                IEnumerable<BlogPost> blogPosts = new List<BlogPost>();
+                if (string.IsNullOrWhiteSpace(searchString))
+                {
+                    return blogPosts;
+                }
+                else
+                {
+                    searchString = searchString.Trim().ToLower();
+                    return _context.BlogPosts!
+                        .Where(b => b.IsPublished && !b.IsDeleted)
+                        .Where(
+                            b => b.Title!.ToLower().Contains(searchString) ||
+                            b.Abstract!.ToLower().Contains(searchString) ||
+                            b.Content!.ToLower().Contains(searchString) ||
+                            b.Category!.Name!.ToLower().Contains(searchString) ||
+                            b.Tags.Any(t => t.Name!.ToLower().Contains(searchString)) ||
+                            b.Comments.Any(
+                                c => c.Body!.ToLower().Contains(searchString) ||
+                                    c.Author!.FirstName!.ToLower().Contains(searchString) ||
+                                    c.Author.LastName!.ToLower().Contains(searchString))
+                            )
+                        .Include(b => b.Comments)
+                            .ThenInclude(c => c.Author)
+                        .Include(b => b.Category)
+                        .Include(b => b.Tags)
+                        .AsNoTracking()
+                        .OrderByDescending(b => b.Created)
+                        .AsEnumerable();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

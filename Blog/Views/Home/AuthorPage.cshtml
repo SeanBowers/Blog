@@ -1,6 +1,9 @@
 ﻿@model IEnumerable<Blog.Models.BlogPost>
 @using Blog.Services
 @using Blog.Services.Interfaces
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
 @inject IImageService ImageService
 @inject IBlogService BlogService
 
@@ -43,13 +46,21 @@
 <div class="axil-post-list-area axil-section-gap bg-color-white">
     <div class="container">
         <div class="row">
-            @*<div class="col-lg-12">
-            <div class="page-title">
-            <h2 class="title mb--40">Articles By This Author</h2>
+            <div class="col-lg-12">
+                <div class="page-title">
+                    <h2 class="title">Articles By This Author</h2>
+                </div>
             </div>
-            </div>*@
             <div class="col-lg-8 col-xl-8">
-                @foreach (var blogPost in Model)
+                <ul class="axil-tab-button nav nav-tabs" role="tablist">
+                    @foreach (var tag in await BlogService.GetTagsAsync(5))
+                    {
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="grid-one" data-bs-toggle="tab" role="tab" asp-action="Details" asp-controller="Tags" asp-route-id="@tag.Id">@tag.Name</a>
+                        </li>
+                    }
+                </ul>
+                @foreach (var blogPost in ViewBag.OnePageOfBlogPosts)
                 {
                     <!-- Start Post List  -->
                     <div class="content-block post-list-view mt--30">
@@ -107,6 +118,15 @@
                     </div>
                     <!-- End Post List  -->
                 }
+                <div id="page-selector">
+                    @Html.PagedListPager((IPagedList)ViewBag.OnePageOfBlogPosts, page => Url.Action("AuthorPage", new { page }),
+                    new PagedListRenderOptions
+                    {
+                    ContainerDivClasses = new string[] { "axil-single-widget", "widget", "widget_social" },
+                    UlElementClasses = new string[] { "social-icon", "justify-content-center" },
+                    LiElementClasses = new string[] { "fab", "fw-bold" }
+                    })
+                </div>
             </div>
             <div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
                 <!-- Start Sidebar Area  -->
@@ -114,11 +134,12 @@
 
                     <!-- Categories  -->
                     <div class="axil-single-widget widget widget_categories mb--30">
+                        <h5 class="widget-title">Categories</h5>
                         <ul>
                             @foreach (Category category in await BlogService.GetCategoriesAsync())
                             {
                                 <li class="cat-item">
-                                    <a href="#" class="inner">
+                                    <a class="inner" asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
                                         <div class="thumbnail">
                                             @if (category.ImageData != null)
                                             {
@@ -130,7 +151,7 @@
                                             }
                                         </div>
                                         <div class="content">
-                                            <h5 class="title">@category.Name</h5>
+                                            <h5 class="title" style="font-size:90%">@category.Name</h5>
                                         </div>
                                     </a>
                                 </li>
@@ -145,6 +166,13 @@
                             <div class="axil-search form-group">
                                 <button type="submit" class="search-button"><i class="fal fa-search"></i></button>
                                 <input type="text" class="form-control" placeholder="Search">
+                            </div>
+                        </form>
+                        <form asp-action="Search" asp-controller="BlogPosts">
+                            <div class="input-group">
+                                <input class="form-control" type="search" name="searchString"
+                                       placeholder="Search Term" />
+                                <input type="submit" class="btn btn-outline-primary" value="Search" />
                             </div>
                         </form>
                     </div>
@@ -193,13 +221,35 @@
                         <!-- End Post List  -->
 
                     </div>
-                    <!-- End Popular  -->
 
+                    <!-- End Popular  -->
+                    <div class="axil-single-widget widget widget_social mb--30">
+                        <h5 class="widget-title">Stay In Touch</h5>
+                        <!-- Start Post List  -->
+                        <ul class="social-icon md-size justify-content-center">
+                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fab fa-slack"></i></a></li>
+                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                        </ul>
+                        <!-- End Post List  -->
+                    </div>
 
                 </div>
                 <!-- End Sidebar Area  -->
             </div>
+
         </div>
     </div>
 </div>
 <!-- End Post List Wrapper  -->
+@section Scripts{
+    <script>
+        let a = document.createElement("a");
+        let span = document.querySelector("#page-selector span");
+        a.textContent = span.textContent;
+        a.style.color = "#fffff"
+        span.replaceWith(a);
+    </script>
+}
