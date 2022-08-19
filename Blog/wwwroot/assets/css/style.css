@@ -10138,8 +10138,8 @@ Sidebar Styles
   text-align: center;
 }
 .axil-single-widget.widget_categories {
-  background: transparent;
-  padding: 0;
+    background: #FBFBFD;
+    padding: 30px;
 }
 .axil-single-widget.widget_categories ul {
   display: -webkit-box;

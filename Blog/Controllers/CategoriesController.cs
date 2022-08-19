@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Blog.Data;
 using Blog.Models;
 using Blog.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Blog.Controllers
 {
@@ -23,25 +25,29 @@ namespace Blog.Controllers
         }
 
         // GET: Categories
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
-              return _context.Categories != null ? 
-                          View(await _context.Categories.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
+            var categories = await _context.Categories
+              .Include(b => b.BlogPosts)
+              .ThenInclude(b => b.Tags)
+              .ToListAsync();
+
+            return View(categories);
         }
 
         // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var category = await _context.Categories
+            var category = await _context.Categories!
                 .Include(b => b.BlogPosts)
-                .Where(b => b.Id == id)
-                .ToListAsync();
+                .FirstOrDefaultAsync(b => b.Id == id);
 
             return View(category);
         }
 
         // GET: Categories/Create
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
@@ -50,6 +56,7 @@ namespace Blog.Controllers
         // POST: Categories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,CategoryImg")] Category category)
@@ -70,6 +77,7 @@ namespace Blog.Controllers
         }
 
         // GET: Categories/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -88,6 +96,7 @@ namespace Blog.Controllers
         // POST: Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageData,ImageType,CategoryImg")] Category category)
@@ -126,6 +135,7 @@ namespace Blog.Controllers
         }
 
         // GET: Categories/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -144,6 +154,7 @@ namespace Blog.Controllers
         }
 
         // POST: Categories/Delete/5
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -157,14 +168,14 @@ namespace Blog.Controllers
             {
                 _context.Categories.Remove(category);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CategoryExists(int id)
         {
-          return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

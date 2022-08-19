@@ -4,9 +4,11 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Blog.Models;
+using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,13 +19,16 @@ namespace Blog.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<BlogUser> _userManager;
         private readonly SignInManager<BlogUser> _signInManager;
+        private readonly IImageService _imageService;
 
         public IndexModel(
             UserManager<BlogUser> userManager,
-            SignInManager<BlogUser> signInManager)
+            SignInManager<BlogUser> signInManager,
+            IImageService imageService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _imageService = imageService;
         }
 
         /// <summary>
@@ -31,6 +36,7 @@ namespace Blog.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public string Username { get; set; }
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -56,6 +62,12 @@ namespace Blog.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            public byte[]? ImageData { get; set; }
+            public string? ImageType { get; set; }
+
+            [NotMapped]
+            public IFormFile? ImageFile { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -63,14 +75,21 @@ namespace Blog.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(BlogUser user)
         {
+
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var imageData = user.ImageData;
+            var imageType = user.ImageType;
+            var imageFile = user.ImageFile;
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                ImageData = imageData,
+                ImageType = imageType,
+                ImageFile = imageFile
             };
         }
 
@@ -99,6 +118,16 @@ namespace Blog.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
+            if (Input.ImageFile != null)
+            {
+                Input.ImageData = await _imageService.ConvertFileToByteArrayAsync(Input.ImageFile);
+                Input.ImageType = Input.ImageFile.ContentType;
+                user.ImageFile = Input.ImageFile;
+                user.ImageData = Input.ImageData;
+                user.ImageType = Input.ImageType;
+                await _userManager.UpdateAsync(user);
+            }
+            
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)

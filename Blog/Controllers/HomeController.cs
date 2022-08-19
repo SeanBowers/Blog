@@ -1,5 +1,6 @@
 ﻿using Blog.Data;
 using Blog.Models;
+using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -25,6 +26,7 @@ namespace Blog.Controllers
                 .Include(b => b.Tags)
                 .Include(b => b.Comments)
                 .ThenInclude(b => b.Author)
+                .OrderByDescending(b => b.Created)
                 .ToListAsync();
 
             var pageNumber = page ?? 1; // if no page was specified in the querystring, default to the first page (1)
@@ -34,7 +36,14 @@ namespace Blog.Controllers
 
             return View(blogPosts);
         }
-        
+        public IActionResult Contact()
+        {
+            return View();
+        }
+        public IActionResult About()
+        {
+            return View();
+        }
         public IActionResult Index()
         {
             return View();

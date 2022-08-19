@@ -10,11 +10,11 @@
                         <hr />
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class=" mt-2">
-                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Email"/>
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Email" />
                             <span asp-validation-for="Input.Email" class="text-danger"></span>
                         </div>
                         <div class=" mt-2">
-                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password"/>
+                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password" />
                             <span asp-validation-for="Input.Password" class="text-danger"></span>
                         </div>
                         <div>
@@ -64,6 +64,30 @@
                                         @foreach (var provider in Model.ExternalLogins)
                                         {
                                             <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+
+                                            //<div id="my-signin2"></div>
+                                            
+                                            //<script>
+                                            //    function onSuccess(googleUser) {
+                                            //        console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+                                            //    }
+                                            //    function onFailure(error) {
+                                            //        console.log(error);
+                                            //    }
+                                            //    function renderButton() {
+                                            //        gapi.signin2.render('my-signin2', {
+                                            //            'scope': 'profile email',
+                                            //            'width': 240,
+                                            //            'height': 50,
+                                            //            'longtitle': true,
+                                            //            'theme': 'dark',
+                                            //            'onsuccess': onSuccess,
+                                            //            'onfailure': onFailure
+                                            //        });
+                                            //    }
+                                            //</script>
+
+                                            //<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
                                         }
                                     </p>
                                 </div>

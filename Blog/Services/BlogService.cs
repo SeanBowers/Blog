@@ -138,7 +138,7 @@ namespace Blog.Services
         {
             try
             {
-                return await _context.Tags!.Include(c => c.BlogPosts).OrderByDescending(b => b.BlogPosts.Count).Take(count).ToListAsync();
+                return await _context.Tags!.Include(c => c.BlogPosts).OrderByDescending(b => b.BlogPosts.Count).ThenBy(b => b.Name).Take(count).ToListAsync();
             }
             catch (Exception)
             {

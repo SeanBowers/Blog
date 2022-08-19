@@ -27,11 +27,10 @@
                             <div class="content">
                                 <p class="b1 description">I am a 26 year old software developer based in Minnesota.</p>
                                 <ul class="social-share-transparent size-md">
-                                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="https://www.linkedin.com/in/sean-bowers/" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                                    <li><a href="https://twitter.com/SeanBowersss" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="https://join.slack.com/t/seanbowersslack/shared_invite/zt-1ehgt8jjm-cbSNl3cwgpzLw2A1lqJeOA" target="_blank"><i class="fab fa-slack"></i></a></li>
                                     <li><a href="#"><i class="far fa-envelope"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -48,18 +47,19 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="page-title">
-                    <h2 class="title">Articles By This Author</h2>
+                    <h2 class="title">All Articles</h2>
                 </div>
             </div>
             <div class="col-lg-8 col-xl-8">
-                <ul class="axil-tab-button nav nav-tabs" role="tablist">
-                    @foreach (var tag in await BlogService.GetTagsAsync(5))
-                    {
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="grid-one" data-bs-toggle="tab" role="tab" asp-action="Details" asp-controller="Tags" asp-route-id="@tag.Id">@tag.Name</a>
-                        </li>
-                    }
-                </ul>
+
+                @*<ul class="axil-tab-button nav nav-tabs" role="tablist">
+                @foreach (var tag in await BlogService.GetTagsAsync(5))
+                {
+                <li class="nav-item" role="presentation">
+                <a class="nav-link" asp-action="Details" asp-controller="Tags" asp-route-id="@tag.Id">@tag.Name</a>
+                </li>
+                }
+                </ul>*@
                 @foreach (var blogPost in ViewBag.OnePageOfBlogPosts)
                 {
                     <!-- Start Post List  -->
@@ -105,13 +105,25 @@
                                             <li>@blogPost.Created.ToString("MMM dd, yyyy")</li>
                                             <li>@blogPost.Comments.Count Comment(s)</li>
                                         </ul>
+                                        <ul class="post-meta-list">
+                                            <li>
+                                                <div class="tagcloud">
+                                                    @foreach (Tag tag in await BlogService.GetBlogTagsAsync(blogPost.Id))
+                                                    {
+                                                        <a asp-action="Details" asp-controller="Tags" asp-route-id="@tag.Id">@tag.Name</a>
+                                                    }
+                                                </div>
+
+
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                                 <ul class="social-share-transparent justify-content-end">
-                                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="#"><i class="fas fa-link"></i></a></li>
+                                    <li><a href="https://www.linkedin.com/in/sean-bowers/" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                                    <li><a href="https://twitter.com/SeanBowersss" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="https://join.slack.com/t/seanbowersslack/shared_invite/zt-1ehgt8jjm-cbSNl3cwgpzLw2A1lqJeOA" target="_blank"><i class="fab fa-slack"></i></a></li>
+                                    <li><a href="#"><i class="far fa-envelope"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -162,24 +174,17 @@
                     <!-- Search  -->
                     <div class="axil-single-widget widget widget_search mb--30">
                         <h5 class="widget-title">Search</h5>
-                        <form action="#">
+                        <form asp-controller="BlogPosts" asp-action="SearchIndex">
                             <div class="axil-search form-group">
                                 <button type="submit" class="search-button"><i class="fal fa-search"></i></button>
-                                <input type="text" class="form-control" placeholder="Search">
-                            </div>
-                        </form>
-                        <form asp-action="Search" asp-controller="BlogPosts">
-                            <div class="input-group">
-                                <input class="form-control" type="search" name="searchString"
-                                       placeholder="Search Term" />
-                                <input type="submit" class="btn btn-outline-primary" value="Search" />
+                                <input type="text" class="form-control" placeholder="Search" name="SearchString" id="SearchString">
                             </div>
                         </form>
                     </div>
                     <!-- End Search  -->
                     <!-- Popular  -->
                     <div class="axil-single-widget widget widget_postlist mb--30">
-                        <h5 class="widget-title">Popular on Blogar</h5>
+                        <h5 class="widget-title">Popular Articles</h5>
                         <!-- Start Post List  -->
                         <div class="post-medium-block">
 
@@ -227,11 +232,10 @@
                         <h5 class="widget-title">Stay In Touch</h5>
                         <!-- Start Post List  -->
                         <ul class="social-icon md-size justify-content-center">
-                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fab fa-slack"></i></a></li>
-                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://www.linkedin.com/in/sean-bowers/" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://twitter.com/SeanBowersss" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="https://join.slack.com/t/seanbowersslack/shared_invite/zt-1ehgt8jjm-cbSNl3cwgpzLw2A1lqJeOA" target="_blank"><i class="fab fa-slack"></i></a></li>
+                            <li><a href="#"><i class="far fa-envelope"></i></a></li>
                         </ul>
                         <!-- End Post List  -->
                     </div>

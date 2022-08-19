@@ -1,13 +1,17 @@
-﻿<!doctype html>
+﻿@using Blog.Services
+@using Blog.Services.Interfaces
+@inject IBlogService BlogService
+<!doctype html>
 <html class="no-js" lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Author || Blogar - Personal Blog Template</title>
+    <title>Code & Caffine - Blog</title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    @*<meta name="google-signin-client_id" content="121376624487-3itgs87r5m13gkev0982bebjl89l2o2b.apps.googleusercontent.com">*@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/favicon.png">
 
@@ -21,6 +25,7 @@
     <link rel="stylesheet" href="~/assets/css/vendor/base.css">
     <link rel="stylesheet" href="~/assets/css/plugins/plugins.css">
     <link rel="stylesheet" href="~/assets/css/style.css">
+
 
 </head>
 
@@ -67,40 +72,41 @@
                                         <a asp-controller="Home" asp-action="AuthorPage">Home</a>
                                     </li>
                                     <li class="menu-item-has-children">
-                                        <a href="#">Posts</a>
+                                        <a href="#">Categories</a>
                                         <ul class="axil-submenu">
-                                            <li>
-                                                <a class="hover-flip-item-wrapper" asp-controller="BlogPosts" asp-action="Index">
-                                                    <span class="">
-                                                        <span>BlogPosts Index</span>
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="hover-flip-item-wrapper" asp-controller="BlogPosts" asp-action="Index">
-                                                    <span class="">
-                                                        <span>BlogPostsIndex</span>
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="hover-flip-item-wrapper" href="post-format-video.html">
-                                                    <span class="hover-flip-item">
-                                                        <span> data-text="Popular Posts"Popular Posts</span>
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="hover-flip-item-wrapper" href="post-format-video.html">
-                                                    <span class="hover-flip-item">
-                                                        <span data-text="Recent Posts">Recent Posts</span>
-                                                    </span>
-                                                </a>
-                                            </li>
+
+                                            @foreach (var category in await BlogService.GetCategoriesAsync())
+                                            {
+
+                                                <li>
+                                                    <a class="hover-flip-item-wrapper" asp-controller="Categories" asp-action="Details" asp-route-id="@category.Id">
+                                                        <span class="hover-flip-item">
+                                                            <span data-text="@category.Name">@category.Name</span>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            }
                                         </ul>
                                     </li>
-                                    <li><a href="home-lifestyle-blog.html">About</a></li>
-                                    <li><a href="home-tech-blog.html">Contact</a></li>
+                                    <li class="menu-item-has-children">
+                                        <a href="#">Tags</a>
+                                        <ul class="axil-submenu">
+
+                                            @foreach (var tag in await BlogService.GetTagsAsync(10))
+                                            {
+
+                                                <li>
+                                                    <a class="hover-flip-item-wrapper" asp-controller="Tags" asp-action="Details" asp-route-id="@tag.Id">
+                                                        <span class="hover-flip-item">
+                                                            <span data-text="@tag.Name">@tag.Name</span>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                    <li><a asp-controller="Home" asp-action="About">About</a></li>
+                                    <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
                                     @if (User.IsInRole("Administrator"))
                                     {
                                         <li class="menu-item-has-children">
@@ -160,144 +166,144 @@
                                     </div>
                                 </form>
                             </div>
-                                <ul class="metabar-block">
-                                    <partial name="_LoginPartial" />
-                                </ul>
-                                <!-- Start Hamburger Menu  -->
-                                <div class="hamburger-menu d-block d-xl-none">
-                                    <div class="hamburger-inner">
-                                        <div class="icon"><i class="fal fa-bars"></i></div>
-                                    </div>
+                            <ul class="metabar-block">
+                                <partial name="_LoginPartial" />
+                            </ul>
+                            <!-- Start Hamburger Menu  -->
+                            <div class="hamburger-menu d-block d-xl-none">
+                                <div class="hamburger-inner">
+                                    <div class="icon"><i class="fal fa-bars"></i></div>
                                 </div>
-                                <!-- End Hamburger Menu  -->
                             </div>
+                            <!-- End Hamburger Menu  -->
                         </div>
-                    </div>
-                </div>
-            </header>
-            <!-- Start Header -->
-            <!-- Start Mobile Menu Area  -->
-            <div class="popup-mobilemenu-area">
-                <div class="inner">
-                    <div class="mobile-menu-top">
-                        <div class="logo">
-                            <a href="index.html">
-                                <img class="dark-logo" src="~/assets/images/logo/logo-black.png" alt="Logo Images">
-                                <img class="light-logo" src="~/assets/images/logo/logo-white2.png" alt="Logo Images">
-                            </a>
-                        </div>
-                        <div class="mobile-close">
-                            <div class="icon">
-                                <i class="fal fa-times"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <ul class="mainmenu">
-                        <li class="menu-item-has-children">
-                            <a href="#">Home</a>
-                            <ul class="axil-submenu">
-                                <li><a href="index.html">Home Default</a></li>
-                                <li><a href="home-creative-blog.html">Home Creative Blog</a></li>
-                                <li><a href="home-seo-blog.html">Home Seo Blog</a></li>
-                                <li><a href="home-tech-blog.html">Home Tech Blog</a></li>
-                                <li><a href="home-lifestyle-blog.html">Home Lifestyle Blog</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-item-has-children">
-                            <a href="#">Categories</a>
-                            <ul class="axil-submenu">
-                                <li><a href="post-details.html">Accessibility</a></li>
-                                <li><a href="post-details.html">Android Dev</a></li>
-                                <li><a href="post-details.html">Accessibility</a></li>
-                                <li><a href="post-details.html">Android Dev</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-item-has-children">
-                            <a href="#">Post Format</a>
-                            <ul class="axil-submenu">
-                                <li><a href="post-format-standard.html">Post Format Standard</a></li>
-                                <li><a href="post-format-video.html">Post Format Video</a></li>
-                                <li><a href="post-format-gallery.html">Post Format Gallery</a></li>
-                                <li><a href="post-format-text.html">Post Format Text Only</a></li>
-                                <li><a href="post-layout-1.html">Post Layout One</a></li>
-                                <li><a href="post-layout-2.html">Post Layout Two</a></li>
-                                <li><a href="post-layout-3.html">Post Layout Three</a></li>
-                                <li><a href="post-layout-4.html">Post Layout Four</a></li>
-                                <li><a href="post-layout-5.html">Post Layout Five</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-item-has-children">
-                            <a href="#">Pages</a>
-                            <ul class="axil-submenu">
-                                <li><a href="post-list.html">Post List</a></li>
-                                <li><a href="archive.html">Post Archive</a></li>
-                                <li><a href="author.html">Author Page</a></li>
-                                <li><a href="about.html">About Page</a></li>
-                                <li><a href="maintenance.html">Maintenance</a></li>
-                                <li><a href="contact.html">Contact Us</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="404.html">404 Page</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
-                    </ul>
-                    <div class="buy-now-btn">
-                        <a href="#">Buy Now <span class="badge">$15</span></a>
                     </div>
                 </div>
             </div>
-            <!-- End Mobile Menu Area  -->
-            @RenderBody()
-            <!-- Start Footer Area  -->
-            <div class="axil-footer-area axil-footer-style-1 bg-color-white">
-                <!-- Start Copyright Area  -->
-                <div class="copyright-area">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-lg-6 col-md-12">
-                                <div class="copyright-left">
-                                    <div class="logo">
-                                        <a href="index.html">
-                                            <img class="dark-logo" src="~/assets/images/logo/logo-black.png" alt="Logo Images">
-                                            <img class="light-logo" src="~/assets/images/logo/logo-white2.png" alt="Logo Images">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12">
-                                <div class="copyright-right text-start text-lg-end mt_md--20 mt_sm--20">
-                                    <p class="b3">Created by Sean A. Bowers - All Rights Reserved © 2022</p>
-                                </div>
-                            </div>
+        </header>
+        <!-- Start Header -->
+        <!-- Start Mobile Menu Area  -->
+        <div class="popup-mobilemenu-area">
+            <div class="inner">
+                <div class="mobile-menu-top">
+                    <div class="logo">
+                        <a href="index.html">
+                            <img class="dark-logo" src="~/assets/images/logo/logo-black.png" alt="Logo Images">
+                            <img class="light-logo" src="~/assets/images/logo/logo-white2.png" alt="Logo Images">
+                        </a>
+                    </div>
+                    <div class="mobile-close">
+                        <div class="icon">
+                            <i class="fal fa-times"></i>
                         </div>
                     </div>
                 </div>
-                <!-- End Copyright Area  -->
+                <ul class="mainmenu">
+                    <li class="menu-item-has-children">
+                        <a href="#">Home</a>
+                        <ul class="axil-submenu">
+                            <li><a href="index.html">Home Default</a></li>
+                            <li><a href="home-creative-blog.html">Home Creative Blog</a></li>
+                            <li><a href="home-seo-blog.html">Home Seo Blog</a></li>
+                            <li><a href="home-tech-blog.html">Home Tech Blog</a></li>
+                            <li><a href="home-lifestyle-blog.html">Home Lifestyle Blog</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children">
+                        <a href="#">Categories</a>
+                        <ul class="axil-submenu">
+                            <li><a href="post-details.html">Accessibility</a></li>
+                            <li><a href="post-details.html">Android Dev</a></li>
+                            <li><a href="post-details.html">Accessibility</a></li>
+                            <li><a href="post-details.html">Android Dev</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children">
+                        <a href="#">Post Format</a>
+                        <ul class="axil-submenu">
+                            <li><a href="post-format-standard.html">Post Format Standard</a></li>
+                            <li><a href="post-format-video.html">Post Format Video</a></li>
+                            <li><a href="post-format-gallery.html">Post Format Gallery</a></li>
+                            <li><a href="post-format-text.html">Post Format Text Only</a></li>
+                            <li><a href="post-layout-1.html">Post Layout One</a></li>
+                            <li><a href="post-layout-2.html">Post Layout Two</a></li>
+                            <li><a href="post-layout-3.html">Post Layout Three</a></li>
+                            <li><a href="post-layout-4.html">Post Layout Four</a></li>
+                            <li><a href="post-layout-5.html">Post Layout Five</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children">
+                        <a href="#">Pages</a>
+                        <ul class="axil-submenu">
+                            <li><a href="post-list.html">Post List</a></li>
+                            <li><a href="archive.html">Post Archive</a></li>
+                            <li><a href="author.html">Author Page</a></li>
+                            <li><a href="about.html">About Page</a></li>
+                            <li><a href="maintenance.html">Maintenance</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="404.html">404 Page</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+                <div class="buy-now-btn">
+                    <a href="#">Buy Now <span class="badge">$15</span></a>
+                </div>
             </div>
-            <!-- End Footer Area  -->
-            <!-- Start Back To Top  -->
-            <a id="backto-top"></a>
-            <!-- End Back To Top  -->
-
         </div>
+        <!-- End Mobile Menu Area  -->
+        @RenderBody()
+        <!-- Start Footer Area  -->
+        <div class="axil-footer-area axil-footer-style-1 bg-color-white">
+            <!-- Start Copyright Area  -->
+            <div class="copyright-area">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="copyright-left">
+                                <div class="logo">
+                                    <a href="index.html">
+                                        <img class="dark-logo" src="~/assets/images/logo/logo-black.png" alt="Logo Images">
+                                        <img class="light-logo" src="~/assets/images/logo/logo-white2.png" alt="Logo Images">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="copyright-right text-start text-lg-end mt_md--20 mt_sm--20">
+                                <p class="b3">Created by Sean A. Bowers - All Rights Reserved © 2022</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Copyright Area  -->
+        </div>
+        <!-- End Footer Area  -->
+        <!-- Start Back To Top  -->
+        <a id="backto-top"></a>
+        <!-- End Back To Top  -->
 
-        <!-- JS
-        ============================================ -->
-        <!-- Modernizer JS -->
-        <script src="~/assets/js/vendor/modernizr.min.js"></script>
-        <!-- jQuery JS -->
-        <script src="~/assets/js/vendor/jquery.js"></script>
-        <!-- Bootstrap JS -->
-        <script src="~/assets/js/vendor/bootstrap.min.js"></script>
-        <script src="~/assets/js/vendor/slick.min.js"></script>
-        <script src="~/assets/js/vendor/tweenmax.min.js"></script>
-        <script src="~/assets/js/vendor/js.cookie.js"></script>
-        <script src="~/assets/js/vendor/jquery.style.switcher.js"></script>
+    </div>
+
+    <!-- JS
+    ============================================ -->
+    <!-- Modernizer JS -->
+    <script src="~/assets/js/vendor/modernizr.min.js"></script>
+    <!-- jQuery JS -->
+    <script src="~/assets/js/vendor/jquery.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/assets/js/vendor/bootstrap.min.js"></script>
+    <script src="~/assets/js/vendor/slick.min.js"></script>
+    <script src="~/assets/js/vendor/tweenmax.min.js"></script>
+    <script src="~/assets/js/vendor/js.cookie.js"></script>
+    <script src="~/assets/js/vendor/jquery.style.switcher.js"></script>
 
 
-        <!-- Main JS -->
-        <script src="~/assets/js/main.js"></script>
-        @await RenderSectionAsync("Scripts", required: false)
+    <!-- Main JS -->
+    <script src="~/assets/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 
-    </body>
+</body>
 
-    </html>
+</html>

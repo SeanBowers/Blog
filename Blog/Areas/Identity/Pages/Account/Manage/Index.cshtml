@@ -1,5 +1,8 @@
 ﻿@page
+@using Blog.Services
+@using Blog.Services.Interfaces
 @model IndexModel
+@inject IImageService ImageService
 @{
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
@@ -9,18 +12,34 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
+        @if (Model.Input.ImageData != null)
+        {
+            <img src="@ImageService.ConvertByteArrayToFile(Model.Input.ImageData, Model.Input.ImageType!)" style="width:250px; height:250px" alt="Post Images">
+        }
+        else
+        {
+            <img src="~/img/DefaultProfileImage.png" alt="Post Image">
+        }
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
-                <input asp-for="Username" class="form-control" disabled />
-                <label asp-for="Username" class="form-label"></label>
+@*            <div class="square-img-container">
+                <img class="img-fluid img-thumbnail" style="width:100px; height:80px" src="/img/DefaultBlogImage.png" id="imageData">
+            </div>*@
+            <div class="mt-2">
+                <input type="file" asp-for="Input.ImageFile" class="form-control" accept=".png,.jpg,.jpeg,.gif"
+                       onchange="document.getElementById('imageData').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="Input.ImageFile" class="text-danger"></span>
             </div>
-            <div class="form-floating">
+            <div class="form-floating mt-2">
+                Username
+                <input asp-for="Username" class="form-control" disabled />
+            </div>
+            <div class="form-floating mt-2">
+                Phone Number
                 <input asp-for="Input.PhoneNumber" class="form-control" />
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary mt-2">Save</button>
         </form>
     </div>
 </div>

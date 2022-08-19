@@ -34,6 +34,7 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
             List<BlogPost> blogPosts = new List<BlogPost>();
@@ -80,7 +81,7 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts/Create
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
@@ -91,7 +92,7 @@ namespace Blog.Controllers
         // POST: BlogPosts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,Abstract,IsPublished,BlogPostImg")] BlogPost blogPost, List<int> TagId)
@@ -129,7 +130,7 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts/Edit/5
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.BlogPosts == null)
@@ -151,7 +152,7 @@ namespace Blog.Controllers
         // POST: BlogPosts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Created,Updated,Slug,Content,CategoryId,Abstract,IsDeleted,IsPublished,ImageData,ImageType,BlogPostImg")] BlogPost blogPost, List<int> TagId)
@@ -214,7 +215,7 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts/Delete/5
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.BlogPosts == null)
@@ -234,7 +235,7 @@ namespace Blog.Controllers
         }
 
         // POST: BlogPosts/Delete/5
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,11 +1,173 @@
-﻿@using Blog.Services
+﻿@model IEnumerable<Blog.Models.Category>
+@using Blog.Services
 @using Blog.Services.Interfaces
-@model IEnumerable<Blog.Models.Category>
 @inject IImageService ImageService
+@inject IBlogService BlogService
 
-@{
-    ViewData["Title"] = "Index";
-}
+<!-- Start Post List Wrapper  -->
+<div class="axil-post-list-area axil-section-gap bg-color-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-title">
+                    <h2 class="title">All Categories</h2>
+                    <p>
+                        <a asp-action="Create">Create New</a>
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-8 col-xl-8">
+
+                @foreach (var category in Model)
+                {
+                    <!-- Start Post List  -->
+                    <div class="content-block post-list-view mt--30">
+                        <div class="post-thumbnail">
+                            <a asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
+                                @if (category.ImageData != null)
+                                {
+                                    <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!)" alt="Post Images">
+                                }
+                                else
+                                {
+                                    <img src="~/img/DefaultBlogImage.png" alt="Post Image">
+                                }
+                            </a>
+                        </div>
+                        <div class="post-content">
+                            <h4 class="title">
+                                <a asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
+                                    @category.Name
+                                </a>
+                            </h4>
+                            <div class="post-meta-wrapper">
+                                <div class="post-meta">
+                                    <div class="content">
+                                        <h6 class="post-author-name">
+                                            <span>@category.BlogPosts.Count @(category.BlogPosts.Count == 1 ? "Article" : "Articles")</span>
+                                        </h6>
+                                        <ul class="post-meta-list">
+                                            <li>
+                                                <div class="tagcloud">
+                                                    <td>
+                                                        <a asp-action="Edit" asp-route-id="@category.Id">Edit</a>
+                                                        <a asp-action="Details" asp-route-id="@category.Id">Details</a>
+                                                        <a asp-action="Delete" asp-route-id="@category.Id">Delete</a>
+                                                    </td>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Post List  -->
+                }
+            </div>
+            <div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
+                <!-- Start Sidebar Area  -->
+                <div class="sidebar-inner">
+                    <!-- Categories  -->
+                    <div class="axil-single-widget widget widget_categories mb--30">
+                        <h5 class="widget-title">Categories</h5>
+                        <ul>
+                            @foreach (Category category in await BlogService.GetCategoriesAsync())
+                            {
+                                <li class="cat-item">
+                                    <a class="inner" asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
+                                        <div class="thumbnail">
+                                            @if (category.ImageData != null)
+                                            {
+                                                <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!)" alt="Post Images">
+                                            }
+                                            else
+                                            {
+                                                <img src="~/img/DefaultBlogImage.png" alt="Category Image">
+                                            }
+                                        </div>
+                                        <div class="content">
+                                            <h5 class="title" style="font-size:90%">@category.Name</h5>
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <!-- End Categories  -->
+                    <!-- Search  -->
+                    <div class="axil-single-widget widget widget_search mb--30">
+                        <h5 class="widget-title">Search</h5>
+                        <form asp-controller="BlogPosts" asp-action="SearchIndex">
+                            <div class="axil-search form-group">
+                                <button type="submit" class="search-button"><i class="fal fa-search"></i></button>
+                                <input type="text" class="form-control" placeholder="Search" name="SearchString" id="SearchString">
+                            </div>
+                        </form>
+                    </div>
+                    <!-- End Search  -->
+                    <!-- Popular  -->
+                    <div class="axil-single-widget widget widget_postlist mb--30">
+                        <h5 class="widget-title">Popular Articles</h5>
+                        <!-- Start Post List  -->
+                        <div class="post-medium-block">
+
+                            <!-- Start Single Post  -->
+                            @foreach (BlogPost blogPost in await BlogService.GetPopularBlogPostsAsync(3))
+                            {
+                                <div class="content-block post-medium mb--20">
+                                    <div class="post-thumbnail">
+                                        <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+                                            @if (blogPost.ImageData != null)
+                                            {
+                                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!)" alt="Post Images">
+                                            }
+                                            else
+                                            {
+                                                <img src="~/img/DefaultBlogImage.png" alt="Post Image">
+                                            }
+                                        </a>
+                                    </div>
+                                    <div class="post-content">
+                                        <h6 class="title">
+                                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+                                                @blogPost.Title
+                                            </a>
+                                        </h6>
+                                        <div class="post-meta">
+                                            <ul class="post-meta-list">
+                                                <li>@blogPost.Created.ToString("MMM dd, yyyy")</li>
+                                                <li>@blogPost.Comments.Count Comment(s)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <!-- End Single Post  -->
+                            <!-- End Single Post  -->
+                        </div>
+                        <!-- End Post List  -->
+                    </div>
+                    <!-- End Popular  -->
+                    <div class="axil-single-widget widget widget_social mb--30">
+                        <h5 class="widget-title">Stay In Touch</h5>
+                        <!-- Start Post List  -->
+                        <ul class="social-icon md-size justify-content-center">
+                            <li><a href="https://www.linkedin.com/in/sean-bowers/" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://twitter.com/SeanBowersss" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="https://join.slack.com/t/seanbowersslack/shared_invite/zt-1ehgt8jjm-cbSNl3cwgpzLw2A1lqJeOA" target="_blank"><i class="fab fa-slack"></i></a></li>
+                            <li><a href="#"><i class="far fa-envelope"></i></a></li>
+                        </ul>
+                        <!-- End Post List  -->
+                    </div>
+
+                </div>
+                <!-- End Sidebar Area  -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Post List Wrapper  -->
 
 <h1>Index</h1>
 
@@ -28,25 +190,26 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <div class="col-md-4 square-img-container">
-                    <img src='@ImageService.ConvertByteArrayToFile(item.ImageData!, item.ImageType!)' class="square-img rounded-start" alt="...">
-                </div>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <div class="col-md-4 square-img-container">
+                        <img src='@ImageService.ConvertByteArrayToFile(item.ImageData!, item.ImageType!)' class="square-img rounded-start" alt="...">
+                    </div>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

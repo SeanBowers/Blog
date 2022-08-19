@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Create";
 }
+<link rel="stylesheet" href="~/ckeditor5/sample/styles.css">
 <div class="axil-post-list-area axil-section-gap bg-color-white">
     <div class="container">
         <div class="row">
@@ -35,7 +36,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Content" class="control-label"></label>
-                        <textarea asp-for="Content" class="form-control" rowls="7"></textarea>
+                        <textarea asp-for="Content" class="form-control editor" rowls="7"></textarea>
                         <span asp-validation-for="Content" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -51,28 +52,6 @@
                         <input asp-for="IsPublished" class="form-check-input"/>Published
                         </label>
                     </div>
-
-                    @*<div class="form-group form-check">
-                    <label class="form-check-label">
-                    <input asp-for="IsDeleted" class="form-check-input"/> @Html.DisplayNameFor(model => model.IsDeleted)
-                    </label>
-                    </div>*@
-                    @*<div class="form-group">
-                    <label asp-for="Created" class="control-label"></label>
-                    <input asp-for="Created" class="form-control" />
-                    <span asp-validation-for="Created" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                    <label asp-for="Updated" class="control-label"></label>
-                    <input asp-for="Updated" class="form-control" />
-                    <span asp-validation-for="Updated" class="text-danger"></span>
-                    </div>*@
-                    @*<div class="form-group">
-                    <label asp-for="Slug" class="control-label"></label>
-                    <input asp-for="Slug" class="form-control" />
-                    <span asp-validation-for="Slug" class="text-danger"></span>
-                    </div>*@
-
                     <div class="form-group">
                         <input type="submit" value="Create" class="btn btn-primary" />
                     </div>
@@ -91,4 +70,23 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/ckeditor5/build/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('.editor'), {
+                licenseKey: '',
+
+            })
+            .then(editor => {
+                window.editor = editor;
+
+
+            })
+            .catch(error => {
+                console.error('Oops, something went wrong!');
+                console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
+                console.warn('Build id: xx09iayzufkn-lkt434h3lx2z');
+                console.error(error);
+            });
+    </script>
     }

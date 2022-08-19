@@ -1,8 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @*Inject our new BlogUser*@
+@using Blog.Services
+@using Blog.Services.Interfaces
 @inject SignInManager<BlogUser> SignInManager
 @inject UserManager<BlogUser> UserManager
-
+@inject IImageService ImageService
 @{
     BlogUser blogUser = await UserManager.GetUserAsync(User);
 }
@@ -10,13 +12,17 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="">
-        <a class="hover-flip-item-wrapper" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @blogUser.FirstName!</a>
-    </li>
-    <li class="">
-        <form id="logout" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("AuthorPage", "Home", new { area = "" })">
-            <a href="javascript:document.getElementById('logout').submit();" class="hover-flip-item-wrapper">Logout</a>
-        </form>
+    <li>
+        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            @if (UserManager.GetUserAsync(User).Result.ImageData != null)
+            {
+                <img src="@ImageService.ConvertByteArrayToFile(UserManager.GetUserAsync(User).Result.ImageData, UserManager.GetUserAsync(User).Result.ImageType!)" alt="Post Images">
+            }
+            else
+            {
+                <img src="~/img/DefaultProfileImage.png" alt="Post Image">
+            }
+        </a>
     </li>
 }
 else
@@ -24,7 +30,7 @@ else
     <li>
         <a class="hover-flip-item-wrapper" asp-area="Identity" asp-page="/Account/Login" title="Manage">
 
-                Login
+            <img src="~/img/DefaultProfileImage.png" alt="Post Image">
 
         </a>
     </li>
