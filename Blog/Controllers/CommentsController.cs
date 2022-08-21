@@ -105,10 +105,15 @@ namespace Blog.Controllers
                 return NotFound();
             }
 
+            if (comment.AuthorId != _userManager.GetUserId(User))
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
                 try
                 {
+                    comment.Created = DataUtility.GetPostGresDate(DateTime.Now);
                     _context.Update(comment);
                     await _context.SaveChangesAsync();
                 }
@@ -123,7 +128,7 @@ namespace Blog.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("AuthorPage", "Home");
             }
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", comment.AuthorId);
             ViewData["BlogPostId"] = new SelectList(_context.BlogPosts, "Id", "Title", comment.BlogPostId);

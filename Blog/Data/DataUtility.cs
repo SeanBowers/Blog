@@ -86,8 +86,8 @@ namespace Blog.Data
                 {
                     Email = _adminEmail,
                     UserName = _adminEmail,
-                    FirstName = "Sean",
-                    LastName = "Bowers",
+                    FirstName = "Blog",
+                    LastName = "Admin",
                     PhoneNumber = "7574038968",
                     EmailConfirmed = true
                 };

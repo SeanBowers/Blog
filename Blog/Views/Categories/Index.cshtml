@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Blog.Models.Category>
+@using Blog.Enums
 @using Blog.Services
 @using Blog.Services.Interfaces
 @inject IImageService ImageService
@@ -24,14 +25,7 @@
                     <div class="content-block post-list-view mt--30">
                         <div class="post-thumbnail">
                             <a asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
-                                @if (category.ImageData != null)
-                                {
-                                    <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!)" alt="Post Images">
-                                }
-                                else
-                                {
-                                    <img src="~/img/DefaultBlogImage.png" alt="Post Image">
-                                }
+                                    <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!, (int)DefaultImage.Category)" alt="Post Images">
                             </a>
                         </div>
                         <div class="post-content">
@@ -77,14 +71,7 @@
                                 <li class="cat-item">
                                     <a class="inner" asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
                                         <div class="thumbnail">
-                                            @if (category.ImageData != null)
-                                            {
-                                                <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!)" alt="Post Images">
-                                            }
-                                            else
-                                            {
-                                                <img src="~/img/DefaultBlogImage.png" alt="Category Image">
-                                            }
+                                                <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!,(int)DefaultImage.Category)" alt="Post Images">
                                         </div>
                                         <div class="content">
                                             <h5 class="title" style="font-size:90%">@category.Name</h5>
@@ -118,14 +105,7 @@
                                 <div class="content-block post-medium mb--20">
                                     <div class="post-thumbnail">
                                         <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
-                                            @if (blogPost.ImageData != null)
-                                            {
-                                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!)" alt="Post Images">
-                                            }
-                                            else
-                                            {
-                                                <img src="~/img/DefaultBlogImage.png" alt="Post Image">
-                                            }
+                                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
                                         </a>
                                     </div>
                                     <div class="post-content">
@@ -201,7 +181,7 @@
                 </td>
                 <td>
                     <div class="col-md-4 square-img-container">
-                        <img src='@ImageService.ConvertByteArrayToFile(item.ImageData!, item.ImageType!)' class="square-img rounded-start" alt="...">
+                        <img src='@ImageService.ConvertByteArrayToFile(item.ImageData!, item.ImageType!,(int)DefaultImage.Category)' class="square-img rounded-start" alt="...">
                     </div>
                 </td>
                 <td>

@@ -1,4 +1,5 @@
 ﻿@model IPagedList<BlogPost>
+@using Blog.Enums
 @using Blog.Services
 @using Blog.Services.Interfaces
 @using X.PagedList
@@ -32,14 +33,7 @@
                                         <div class="content-block post-list-view mt--30">
                                             <div class="post-thumbnail">
                                                 <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
-                                                    @if (blogPost.ImageData != null)
-                                                    {
-                                                        <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!)" alt="Post Images">
-                                                    }
-                                                    else
-                                                    {
-                                                        <img src="~/img/DefaultBlogImage.png" alt="Post Image">
-                                                    }
+                                                        <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
                                                 </a>
                                             </div>
                                             <div class="post-content">

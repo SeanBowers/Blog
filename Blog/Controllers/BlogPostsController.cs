@@ -15,6 +15,7 @@ using X.PagedList;
 
 namespace Blog.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class BlogPostsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -34,7 +35,6 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts
-        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
             List<BlogPost> blogPosts = new List<BlogPost>();
@@ -46,6 +46,7 @@ namespace Blog.Controllers
 
             return View(blogPosts);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> SearchIndex(string searchString, int? pageNum)
         {
             int pageSize = 5;
@@ -59,6 +60,7 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(string? slug)
         {
             if (string.IsNullOrEmpty(slug))
@@ -81,7 +83,6 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts/Create
-        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
@@ -92,7 +93,6 @@ namespace Blog.Controllers
         // POST: BlogPosts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,Abstract,IsPublished,BlogPostImg")] BlogPost blogPost, List<int> TagId)
@@ -130,7 +130,6 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts/Edit/5
-        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.BlogPosts == null)
@@ -152,7 +151,6 @@ namespace Blog.Controllers
         // POST: BlogPosts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Created,Updated,Slug,Content,CategoryId,Abstract,IsDeleted,IsPublished,ImageData,ImageType,BlogPostImg")] BlogPost blogPost, List<int> TagId)
@@ -215,7 +213,6 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts/Delete/5
-        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.BlogPosts == null)
@@ -235,7 +232,6 @@ namespace Blog.Controllers
         }
 
         // POST: BlogPosts/Delete/5
-        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -245,6 +241,7 @@ namespace Blog.Controllers
                 return Problem("Entity set 'ApplicationDbContext.BlogPosts'  is null.");
             }
             var blogPost = await _context.BlogPosts.FindAsync(id);
+            //blogPost.IsDeleted = true;
             if (blogPost != null)
             {
                 _context.BlogPosts.Remove(blogPost);

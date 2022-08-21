@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class TagsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,7 +22,6 @@ namespace Blog.Controllers
         }
 
         // GET: Tags
-        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
               return _context.Tags != null ? 
@@ -30,6 +30,7 @@ namespace Blog.Controllers
         }
 
         // GET: Tags/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             var tag = await _context.Tags!
@@ -41,7 +42,6 @@ namespace Blog.Controllers
         }
 
         // GET: Tags/Create
-        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
@@ -50,7 +50,6 @@ namespace Blog.Controllers
         // POST: Tags/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Tag tag)
@@ -65,7 +64,6 @@ namespace Blog.Controllers
         }
 
         // GET: Tags/Edit/5
-        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Tags == null)
@@ -84,7 +82,6 @@ namespace Blog.Controllers
         // POST: Tags/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Tag tag)
@@ -118,7 +115,6 @@ namespace Blog.Controllers
         }
 
         // GET: Tags/Delete/5
-        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Tags == null)
@@ -137,7 +133,6 @@ namespace Blog.Controllers
         }
 
         // POST: Tags/Delete/5
-        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

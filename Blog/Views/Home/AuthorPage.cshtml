@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Blog.Models.BlogPost>
+@using Blog.Enums
 @using Blog.Services
 @using Blog.Services.Interfaces
 @using X.PagedList
@@ -66,14 +67,7 @@
                     <div class="content-block post-list-view mt--30">
                         <div class="post-thumbnail">
                             <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
-                                @if (blogPost.ImageData != null)
-                                {
-                                    <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!)" alt="Post Images">
-                                }
-                                else
-                                {
-                                    <img src="~/img/DefaultBlogImage.png" alt="Post Image">
-                                }
+                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!, (int)DefaultImage.BlogPost)" alt="Post Images">
                             </a>
                         </div>
                         <div class="post-content">
@@ -120,10 +114,7 @@
                                     </div>
                                 </div>
                                 <ul class="social-share-transparent justify-content-end">
-                                    <li><a href="https://www.linkedin.com/in/sean-bowers/" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
-                                    <li><a href="https://twitter.com/SeanBowersss" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="https://join.slack.com/t/seanbowersslack/shared_invite/zt-1ehgt8jjm-cbSNl3cwgpzLw2A1lqJeOA" target="_blank"><i class="fab fa-slack"></i></a></li>
-                                    <li><a href="#"><i class="far fa-envelope"></i></a></li>
+                                    <li><a href="https://twitter.com/intent/tweet?url=https://localhost:7043/Content/@blogPost.Slug" target="_blank"><i class="fab fa-twitter"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -153,14 +144,7 @@
                                 <li class="cat-item">
                                     <a class="inner" asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
                                         <div class="thumbnail">
-                                            @if (category.ImageData != null)
-                                            {
-                                                <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!)" alt="Post Images">
-                                            }
-                                            else
-                                            {
-                                                <img src="~/img/DefaultBlogImage.png" alt="Category Image">
-                                            }
+                                            <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!,(int)DefaultImage.Category)" alt="Post Images">
                                         </div>
                                         <div class="content">
                                             <h5 class="title" style="font-size:90%">@category.Name</h5>
@@ -194,14 +178,7 @@
                                 <div class="content-block post-medium mb--20">
                                     <div class="post-thumbnail">
                                         <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
-                                            @if (blogPost.ImageData != null)
-                                            {
-                                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!)" alt="Post Images">
-                                            }
-                                            else
-                                            {
-                                                <img src="~/img/DefaultBlogImage.png" alt="Post Image">
-                                            }
+                                            <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!,(int)DefaultImage.Category)" alt="Post Images">
                                         </a>
                                     </div>
                                     <div class="post-content">
@@ -256,4 +233,6 @@
         a.style.color = "#fffff"
         span.replaceWith(a);
     </script>
+
+
 }

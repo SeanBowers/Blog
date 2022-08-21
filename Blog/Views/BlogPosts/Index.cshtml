@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Blog.Models.BlogPost>
+@using Blog.Enums
 @using Blog.Services.Interfaces;
 
 @inject IImageService ImageService
@@ -85,7 +86,7 @@
                             </td>
                             <td>
                                 <div class="post-thumbnail">
-                                    <img src='@ImageService.ConvertByteArrayToFile(item.ImageData!, item.ImageType!)' alt="...">
+                                    <img src='@ImageService.ConvertByteArrayToFile(item.ImageData!, item.ImageType!,(int)DefaultImage.BlogPost)' alt="...">
                                 </div>
                             </td>
                             <td>

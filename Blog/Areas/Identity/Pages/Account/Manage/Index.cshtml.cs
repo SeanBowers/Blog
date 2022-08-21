@@ -62,11 +62,19 @@ namespace Blog.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            public byte[]? ImageData { get; set; }
-            public string? ImageType { get; set; }
+            public byte[] ImageData { get; set; }
+            public string ImageType { get; set; }
 
             [NotMapped]
-            public IFormFile? ImageFile { get; set; }
+            public IFormFile ImageFile { get; set; }
+
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and a max {1} characters long.", MinimumLength = 2)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and a max {1} characters long.", MinimumLength = 2)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
 
             [Phone]
             [Display(Name = "Phone number")]
@@ -81,6 +89,8 @@ namespace Blog.Areas.Identity.Pages.Account.Manage
             var imageData = user.ImageData;
             var imageType = user.ImageType;
             var imageFile = user.ImageFile;
+            var firstName = user.FirstName;
+            var lastName = user.LastName;
 
             Username = userName;
 
@@ -89,7 +99,9 @@ namespace Blog.Areas.Identity.Pages.Account.Manage
                 PhoneNumber = phoneNumber,
                 ImageData = imageData,
                 ImageType = imageType,
-                ImageFile = imageFile
+                ImageFile = imageFile,
+                FirstName = firstName,
+                LastName = lastName
             };
         }
 
@@ -120,14 +132,13 @@ namespace Blog.Areas.Identity.Pages.Account.Manage
             }
             if (Input.ImageFile != null)
             {
-                Input.ImageData = await _imageService.ConvertFileToByteArrayAsync(Input.ImageFile);
-                Input.ImageType = Input.ImageFile.ContentType;
-                user.ImageFile = Input.ImageFile;
-                user.ImageData = Input.ImageData;
-                user.ImageType = Input.ImageType;
-                await _userManager.UpdateAsync(user);
+                user.ImageData = await _imageService.ConvertFileToByteArrayAsync(Input.ImageFile);
+                user.ImageType = Input.ImageFile.ContentType;
             }
             
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+            await _userManager.UpdateAsync(user);
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)

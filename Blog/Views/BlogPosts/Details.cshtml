@@ -1,9 +1,16 @@
-﻿@using Blog.Services
+﻿@using Blog.Enums
+@using Blog.Services
 @using Blog.Services.Interfaces
 @using Microsoft.AspNetCore.Identity
 @model Blog.Models.BlogPost
 @inject IImageService ImageService
 @inject SignInManager<BlogUser> _SignInManager
+@inject UserManager<BlogUser> UserManager
+
+@{
+
+    BlogUser blogUser = await UserManager.GetUserAsync(User);
+}
 @{
     ViewData["Title"] = "Details";
 
@@ -75,20 +82,13 @@
                         @Model.Abstract
                     </p>
                     <figure class="wp-block-image alignwide text-center">
-                        @if (Model.ImageData != null)
-                        {
-                            <img src="@ImageService.ConvertByteArrayToFile(Model.ImageData, Model.ImageType!)" alt="Post Images">
-                        }
-                        else
-                        {
-                            <img src="~/img/DefaultBlogImage.png" alt="Post Image">
-                        }
+                            <img src="@ImageService.ConvertByteArrayToFile(Model.ImageData, Model.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
                     </figure>
 
                     <p>
-                        @Model.Content
+                        @Html.Raw(Model.Content)
                     </p>
-
+                    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large">Tweet</a>
                     <div class="tagcloud">
                         @foreach (Tag tag in Model.Tags)
                         {
@@ -138,17 +138,17 @@
                         <!-- Start Comment Respond  -->
                         <div class="comment-respond">
                             <h4 class="title">Post a comment</h4>
-                            <div class="row row--10">
+                            <div class="row">
                                 <form asp-action="Create" asp-controller="Comments" method="POST">
                                     <input type="hidden" asp-for="Id" name="BlogPostId" />
                                     <input type="hidden" asp-for="Slug" />
-                                    <div class="col-12">
+                                    <div class="col">
                                         <div class="form-group">
-                                            <textarea id="message" name="Body"></textarea>
+                                            <textarea id="message" name="Body" class="w-100"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
-                                        <div class="form-submit cerchio">
+                                        <div class="form-submit cerchio mt-2">
                                             @if (_SignInManager.IsSignedIn(User))
                                             {
                                                 <input type="submit" class="axil-button button-rounded" value="Post Comment">
@@ -177,14 +177,31 @@
                                                     <h6 class="commenter">
                                                         <a class="hover-flip-item-wrapper" href="#">
                                                             <span class="hover-flip-item">
-                                                                <span data-text="@comment.Author.FullName">
+                                                                <span data-text="@comment.Author!.FullName">
                                                                     @comment.Author.FullName
                                                                 </span>
                                                             </span>
                                                         </a>
                                                     </h6>
                                                     <div class="comment-meta">
-                                                        <div class="time-spent">@comment.Created.ToString("MMM dd, yyyy")</div>
+                                                        <div class="time-spent">
+                                                            @comment.Created.ToString("MMM dd, yyyy")
+                                                            @if (_SignInManager.IsSignedIn(User))
+                                                            {
+                                                                @if (blogUser.Id == comment.AuthorId || User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+                                                                {
+                                                                    <a class="" asp-action="Edit" asp-controller="Comments" asp-route-id="@comment.Id">
+                                                                        &#8226 Edit
+                                                                    </a>
+                                                                    <a class="" href="#">
+                                                                        &#8226 Delete
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                }
+                                                            }
+                                                        </div>
                                                     </div>
                                                     <div class="comment-text">
                                                         <p class="b2">
@@ -208,3 +225,6 @@
         </div>
     </div>
 </div>
+@section Scripts{
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+}
