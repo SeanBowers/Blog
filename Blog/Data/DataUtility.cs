@@ -106,7 +106,7 @@ namespace Blog.Data
                     EmailConfirmed = true
                 };
                 await userManager.CreateAsync(modUser, configuration["ModeratorPwd"] ?? Environment.GetEnvironmentVariable("ModeratorPwd"));
-                await userManager.AddToRoleAsync(modUser, _modRole);
+                await userManager.AddToRoleAsync(modUser, _modRole); 
             }
         }
     }
