@@ -39,7 +39,7 @@ namespace Blog.Controllers
         {
             List<BlogPost> blogPosts = new List<BlogPost>();
 
-            blogPosts = await _context.BlogPosts
+            blogPosts = await _context.BlogPosts!
                 .Include(b => b.Category)
                 .Include(b => b.Tags)
                 .ToListAsync();
@@ -68,7 +68,7 @@ namespace Blog.Controllers
                 return NotFound();
             }
 
-            BlogPost? blogPost = await _context.BlogPosts
+            BlogPost? blogPost = await _context.BlogPosts!
                 .Include(b => b.Category)
                 .Include(b => b.Tags)
                 .Include(b => b.Comments)

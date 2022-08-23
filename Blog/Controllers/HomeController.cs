@@ -1,6 +1,7 @@
 ﻿using Blog.Data;
 using Blog.Models;
 using Blog.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -12,16 +13,20 @@ namespace Blog.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<BlogUser> _userManager;
+        private readonly IEmailService _emailService;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<BlogUser> userManager, IEmailService emailService)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
+            _emailService = emailService;
         }
         public async Task<IActionResult> AuthorPage(int? page)
         {
             //TODO: Create Service to get blogposts
-            var blogPosts = await _context.BlogPosts
+            var blogPosts = await _context.BlogPosts!
                 .Include(b => b.Category)
                 .Include(b => b.Tags)
                 .Include(b => b.Comments)
@@ -36,9 +41,33 @@ namespace Blog.Controllers
 
             return View(blogPosts);
         }
-        public IActionResult Contact()
+        public IActionResult Contact(string swalMessage = null!)
         {
+            ViewData["SwalMessage"] = swalMessage;
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Contact(EmailData emailData)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    BlogUser blogUser = await _userManager.GetUserAsync(User);
+                    emailData.UserName = blogUser.UserName;
+                    emailData.FirstName = blogUser.FirstName;
+                    emailData.LastName = blogUser.LastName;
+                    await _emailService.SendEmailAsync(emailData.FirstName!, emailData.LastName!, emailData.UserName, emailData.Subject, emailData.Body);
+                    return RedirectToAction("Contact", "Home", new { swalMessage = "Email Sent!" });
+                }
+                catch
+                {
+                    return RedirectToAction("Contact", "Home", new { swalMessage = "Error: Email Send Failed!" });
+                    throw;
+                }
+            }
+            return View(emailData);
         }
         public IActionResult About()
         {

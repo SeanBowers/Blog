@@ -23,7 +23,7 @@
                         <input type="hidden" asp-for="ImageData" />
                         <input type="hidden" asp-for="ImageType" />
                         <div class="square-img-container">
-                                <img class="img-fluid img-thumbnail" style="width:100px; height:80px" src="@ImageService.ConvertByteArrayToFile(Model.ImageData, Model.ImageType!,(int)DefaultImage.BlogPost)" id="imageData">
+                                <img class="img-fluid img-thumbnail" style="width:100px; height:80px" src="@ImageService.ConvertByteArrayToFile(Model.ImageData!, Model.ImageType!,(int)DefaultImage.BlogPost)" id="imageData">
                         </div>
                         <div>
                             <label asp-for="BlogPostImg" class="control-label"></label>

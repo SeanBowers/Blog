@@ -22,7 +22,7 @@
                     <div class="content-block post-list-view mt--30">
                         <div class="post-thumbnail">
                             <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
-                                    <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
+                                    <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
                             </a>
                         </div>
                         <div class="post-content">
@@ -62,14 +62,12 @@
                                                         <a asp-action="Details" asp-controller="Tags" asp-route-id="@tag.Id">@tag.Name</a>
                                                     }
                                                 </div>
-
-
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
                                 <ul class="social-share-transparent justify-content-end">
-                                    <li><a href="https://twitter.com/intent/tweet?url=https://localhost:7043/Content/@blogPost.Slug" target="_blank"><i class="far fa-envelope"></i></a></li>
+                                    <li><a href="https://twitter.com/intent/tweet?url=https://localhost:7043/Content/@blogPost.Slug" target="_blank"><i class="fab fa-twitter"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -89,7 +87,7 @@
                                 <li class="cat-item">
                                     <a class="inner" asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
                                         <div class="thumbnail">
-                                                <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!,(int)DefaultImage.Category)" alt="Post Images">
+                                                <img src="@ImageService.ConvertByteArrayToFile(category.ImageData!, category.ImageType!,(int)DefaultImage.Category)" alt="Post Images">
                                         </div>
                                         <div class="content">
                                             <h5 class="title" style="font-size:90%">@category.Name</h5>
@@ -123,7 +121,7 @@
                                 <div class="content-block post-medium mb--20">
                                     <div class="post-thumbnail">
                                         <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
-                                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
+                                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
                                         </a>
                                     </div>
                                     <div class="post-content">

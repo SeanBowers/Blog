@@ -25,7 +25,7 @@
                     <div class="content-block post-list-view mt--30">
                         <div class="post-thumbnail">
                             <a asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
-                                    <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!, (int)DefaultImage.Category)" alt="Post Images">
+                                    <img src="@ImageService.ConvertByteArrayToFile(category.ImageData!, category.ImageType!, (int)DefaultImage.Category)" alt="Post Images">
                             </a>
                         </div>
                         <div class="post-content">
@@ -71,7 +71,7 @@
                                 <li class="cat-item">
                                     <a class="inner" asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
                                         <div class="thumbnail">
-                                                <img src="@ImageService.ConvertByteArrayToFile(category.ImageData, category.ImageType!,(int)DefaultImage.Category)" alt="Post Images">
+                                                <img src="@ImageService.ConvertByteArrayToFile(category.ImageData!, category.ImageType!,(int)DefaultImage.Category)" alt="Post Images">
                                         </div>
                                         <div class="content">
                                             <h5 class="title" style="font-size:90%">@category.Name</h5>
@@ -105,7 +105,7 @@
                                 <div class="content-block post-medium mb--20">
                                     <div class="post-thumbnail">
                                         <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
-                                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
+                                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
                                         </a>
                                     </div>
                                     <div class="post-content">

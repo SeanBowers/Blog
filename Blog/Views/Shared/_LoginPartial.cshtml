@@ -16,7 +16,7 @@
 {
     <li>
         <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-            <img src="@ImageService.ConvertByteArrayToFile(blogUser.ImageData, blogUser.ImageType!, (int)DefaultImage.BlogUser)" alt="Post Images"/>
+            <img src="@ImageService.ConvertByteArrayToFile(blogUser.ImageData!, blogUser.ImageType!, (int)DefaultImage.BlogUser)" alt="Post Images"/>
         </a>
     </li>
 }

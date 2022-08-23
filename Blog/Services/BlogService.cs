@@ -40,10 +40,10 @@ namespace Blog.Services
         {
             try
             {
-                BlogPost blog = await _context.BlogPosts.Include(t => t.Tags)
+                var blog = await _context.BlogPosts!.Include(t => t.Tags)
                     .FirstOrDefaultAsync(b => b.Id == blogId);
 
-                return blog.Tags;
+                return blog!.Tags;
             }
             catch
             {
@@ -55,9 +55,9 @@ namespace Blog.Services
         {
             try
             {
-                BlogPost blog = await _context.BlogPosts.Include(t => t.Tags)
+                var blog = await _context.BlogPosts!.Include(t => t.Tags)
                     .FirstOrDefaultAsync(b => b.Id == blogId);
-                List<int> tagIds = blog.Tags.Select(b => b.Id).ToList();
+                List<int> tagIds = blog!.Tags.Select(b => b.Id).ToList();
                 return tagIds;
             }
             catch
@@ -73,7 +73,7 @@ namespace Blog.Services
 
                 return await _context.Tags!
                     .Include(b => b.BlogPosts)
-                    .Where(t => t.Id == tagId && t.BlogPosts.Contains(blog))
+                    .Where(t => t.Id == tagId && t.BlogPosts.Contains(blog!))
                     .AnyAsync();
             }
             catch

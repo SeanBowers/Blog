@@ -61,33 +61,9 @@
                             <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                                 <div>
                                     <p>
-                                        @foreach (var provider in Model.ExternalLogins)
+                                        @foreach (var provider in Model.ExternalLogins!)
                                         {
-                                            <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-
-                                            //<div id="my-signin2"></div>
-                                            
-                                            //<script>
-                                            //    function onSuccess(googleUser) {
-                                            //        console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-                                            //    }
-                                            //    function onFailure(error) {
-                                            //        console.log(error);
-                                            //    }
-                                            //    function renderButton() {
-                                            //        gapi.signin2.render('my-signin2', {
-                                            //            'scope': 'profile email',
-                                            //            'width': 240,
-                                            //            'height': 50,
-                                            //            'longtitle': true,
-                                            //            'theme': 'dark',
-                                            //            'onsuccess': onSuccess,
-                                            //            'onfailure': onFailure
-                                            //        });
-                                            //    }
-                                            //</script>
-
-                                            //<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+                                            <button class="btn btn-lg btn-social btn-google" type="submit" name="provider" value="@provider.Name"> Sign in with Google</button>
                                         }
                                     </p>
                                 </div>

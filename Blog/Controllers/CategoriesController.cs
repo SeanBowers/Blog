@@ -28,7 +28,7 @@ namespace Blog.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            var categories = await _context.Categories
+            var categories = await _context.Categories!
               .Include(b => b.BlogPosts)
               .ThenInclude(b => b.Tags)
               .ToListAsync();
