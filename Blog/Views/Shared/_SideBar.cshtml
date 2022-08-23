@@ -1,0 +1,96 @@
+﻿@using Blog.Enums
+@using Blog.Services
+@using Blog.Services.Interfaces
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<BlogUser> UserManager
+@inject IBlogService BlogService
+@inject IImageService ImageService
+<div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
+    <!-- Start Sidebar Area  -->
+    <div class="sidebar-inner">
+
+        <!-- Categories  -->
+        <div class="axil-single-widget widget widget_categories mb--30">
+            <h5 class="widget-title">Categories</h5>
+            <ul>
+                @foreach (Category category in await BlogService.GetCategoriesAsync())
+                {
+                    <li class="cat-item">
+                        <a class="inner" asp-action="Details" asp-controller="Categories" asp-route-id="@category.Id">
+                            <div class="thumbnail">
+                                <img src="@ImageService.ConvertByteArrayToFile(category.ImageData!, category.ImageType!,(int)DefaultImage.Category)" alt="Post Images">
+                            </div>
+                            <div class="content">
+                                <h5 class="title" style="font-size:90%">@category.Name</h5>
+                            </div>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <!-- End Categories  -->
+        <!-- Search  -->
+        <div class="axil-single-widget widget widget_search mb--30">
+            <h5 class="widget-title">Search</h5>
+            <form asp-controller="BlogPosts" asp-action="SearchIndex">
+                <div class="axil-search form-group">
+                    <button type="submit" class="search-button"><i class="fal fa-search"></i></button>
+                    <input type="text" class="form-control" placeholder="Search" name="SearchString" id="SearchString">
+                </div>
+            </form>
+        </div>
+        <!-- End Search  -->
+        <!-- Popular  -->
+        <div class="axil-single-widget widget widget_postlist mb--30">
+            <h5 class="widget-title">Popular Articles</h5>
+            <!-- Start Post List  -->
+            <div class="post-medium-block">
+
+                <!-- Start Single Post  -->
+                @foreach (BlogPost blogPost in await BlogService.GetPopularBlogPostsAsync(3))
+                {
+                    <div class="content-block post-medium mb--20">
+                        <div class="post-thumbnail">
+                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+                                <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!,(int)DefaultImage.Category)" alt="Post Images">
+                            </a>
+                        </div>
+                        <div class="post-content">
+                            <h6 class="title">
+                                <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+                                    @blogPost.Title
+                                </a>
+                            </h6>
+                            <div class="post-meta">
+                                <ul class="post-meta-list">
+                                    <li>@blogPost.Created.ToString("MMM dd, yyyy")</li>
+                                    <li>@blogPost.Comments.Count Comment(s)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!-- End Single Post  -->
+                <!-- End Single Post  -->
+
+            </div>
+            <!-- End Post List  -->
+
+        </div>
+
+        <!-- End Popular  -->
+        <div class="axil-single-widget widget widget_social mb--30">
+            <h5 class="widget-title">Stay In Touch</h5>
+            <!-- Start Post List  -->
+            <ul class="social-icon md-size justify-content-center">
+                <li><a href="https://www.linkedin.com/in/sean-bowers/" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                <li><a href="https://twitter.com/SeanBowersss" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="https://join.slack.com/t/seanbowersslack/shared_invite/zt-1ehgt8jjm-cbSNl3cwgpzLw2A1lqJeOA" target="_blank"><i class="fab fa-slack"></i></a></li>
+                <li><a href="#"><i class="far fa-envelope"></i></a></li>
+            </ul>
+            <!-- End Post List  -->
+        </div>
+
+    </div>
+    <!-- End Sidebar Area  -->
+</div>
