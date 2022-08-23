@@ -91,7 +91,7 @@ namespace Blog.Data
                     PhoneNumber = "7574038968",
                     EmailConfirmed = true
                 };
-                await userManager.CreateAsync(adminUser, configuration["AdminPwd"]);
+                await userManager.CreateAsync(adminUser, configuration["AdminPwd"] ?? Environment.GetEnvironmentVariable("AdminPwd"));
                 await userManager.AddToRoleAsync(adminUser, _adminRole);
             }
             if (!context.Users.Any(u => u.Email == _modEmail))
@@ -105,7 +105,7 @@ namespace Blog.Data
                     PhoneNumber = "7574038968",
                     EmailConfirmed = true
                 };
-                await userManager.CreateAsync(modUser, configuration["ModeratorPwd"]);
+                await userManager.CreateAsync(modUser, configuration["ModeratorPwd"] ?? Environment.GetEnvironmentVariable("ModeratorPwd"));
                 await userManager.AddToRoleAsync(modUser, _modRole);
             }
         }
