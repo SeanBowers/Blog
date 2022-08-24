@@ -20,7 +20,6 @@ namespace Blog.Controllers.API
         {
             _context = context;
         }
-
         /// <summary>
         /// Get most recent blog posts.
         /// </summary>
