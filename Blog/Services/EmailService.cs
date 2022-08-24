@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Blog.Services
 {
-    public class EmailService : IEmailSender, IEmailService
+    public class EmailService : /*IEmailSender,*/ IEmailService
     {
         private readonly MailSettings _mailSettings;
 
