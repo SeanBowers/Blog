@@ -59,11 +59,20 @@ namespace Blog.Controllers
                     var firstName = blogUser.FirstName;
                     var lastName = blogUser.LastName;
 
-                    var adminEmail = "theseanbowers14@gmail.com";
+                    var adminEmail = "theseanbowers@gmail.com";
 
-                    emailData.Body += firstName + lastName + email;
+                    var body = @$"
+                            <tr>
+                                <td>{firstName + lastName}</td>
+                                <td>{email}</td>
+                            </tr> 
+                            <hr>
+                            <tr>
+                                <td>{emailData.Subject}</td>
+                                <td>{emailData.Body}</td>
+                            </tr>";
                     
-                    await _emailService.SendAdminEmailAsync(adminEmail, emailData.Subject, emailData.Body);
+                    await _emailService.SendAdminEmailAsync(adminEmail, emailData.Subject, body);
                     return RedirectToAction("Contact", "Home", new { swalMessage = "Email Sent!" });
                 }
                 catch
