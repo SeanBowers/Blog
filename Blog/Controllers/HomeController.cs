@@ -2,6 +2,7 @@
 using Blog.Models;
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -14,14 +15,14 @@ namespace Blog.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BlogUser> _userManager;
-        private readonly IEmailService _emailService;
+        private readonly IEmailSender _emailSender;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<BlogUser> userManager, IEmailService emailService)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<BlogUser> userManager, IEmailSender emailSender)
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
-            _emailService = emailService;
+            _emailSender = emailSender;
         }
         public async Task<IActionResult> AuthorPage(int? page)
         {
@@ -60,20 +61,24 @@ namespace Blog.Controllers
 
                     var body = @$"
                             <tr>
+                                <td>Name: </td>
                                 <td>{blogUser.FullName}</td>
                             </tr>
                             <tr>
+                                <td>Email: </td>
                                 <td>{blogUser.UserName}</td>
                             </td>
-                            <hr>
+                            <hr />
                             <tr>
+                                <td>Subject: </td>
                                 <td>{emailData.Subject}</td>
                             </tr>
                             <tr>
+                                <td>Message: </td>
                                 <td>{emailData.Body}</td>
                             </td>";
-                    
-                    await _emailService.SendAdminEmailAsync(adminEmail, emailData.Subject, body);
+
+                    await _emailSender.SendEmailAsync(adminEmail, emailData.Subject, body);
                     return RedirectToAction("Contact", "Home", new { swalMessage = "Email Sent!" });
                 }
                 catch
