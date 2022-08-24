@@ -55,10 +55,15 @@ namespace Blog.Controllers
                 try
                 {
                     BlogUser blogUser = await _userManager.GetUserAsync(User);
-                    emailData.UserName = blogUser.UserName;
-                    emailData.FirstName = blogUser.FirstName;
-                    emailData.LastName = blogUser.LastName;
-                    await _emailService.SendEmailAsync(emailData.FirstName!, emailData.LastName!, emailData.UserName, emailData.Subject, emailData.Body);
+                    var email = blogUser.UserName;
+                    var firstName = blogUser.FirstName;
+                    var lastName = blogUser.LastName;
+
+                    var adminEmail = "theseanbowers14@gmail.com";
+
+                    emailData.Body += firstName + lastName + email;
+                    
+                    await _emailService.SendAdminEmailAsync(adminEmail, emailData.Subject, emailData.Body);
                     return RedirectToAction("Contact", "Home", new { swalMessage = "Email Sent!" });
                 }
                 catch
