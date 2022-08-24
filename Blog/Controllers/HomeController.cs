@@ -55,22 +55,23 @@ namespace Blog.Controllers
                 try
                 {
                     BlogUser blogUser = await _userManager.GetUserAsync(User);
-                    var email = blogUser.UserName;
-                    var firstName = blogUser.FirstName;
-                    var lastName = blogUser.LastName;
 
                     var adminEmail = "theseanbowers@gmail.com";
 
                     var body = @$"
                             <tr>
-                                <td>{firstName + lastName}</td>
-                                <td>{email}</td>
-                            </tr> 
+                                <td>{blogUser.FullName}</td>
+                            </tr>
+                            <tr>
+                                <td>{blogUser.UserName}</td>
+                            </td>
                             <hr>
                             <tr>
                                 <td>{emailData.Subject}</td>
+                            </tr>
+                            <tr>
                                 <td>{emailData.Body}</td>
-                            </tr>";
+                            </td>";
                     
                     await _emailService.SendAdminEmailAsync(adminEmail, emailData.Subject, body);
                     return RedirectToAction("Contact", "Home", new { swalMessage = "Email Sent!" });
