@@ -254,6 +254,34 @@
                     </li>
                     <li><a href="404.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li class="menu-item-has-children">
+                            <a href="#">Author</a>
+                            <ul class="axil-submenu">
+                                <li>
+                                    <a class="hover-flip-item-wrapper" asp-controller="BlogPosts" asp-action="Create">
+                                        New Post
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="hover-flip-item-wrapper" asp-controller="BlogPosts" asp-action="Index">
+                                        Manage Posts
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="hover-flip-item-wrapper" asp-controller="Categories" asp-action="Index">
+                                        Manage Categories
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="hover-flip-item-wrapper" asp-controller="Tags" asp-action="Index">
+                                        Manage Tags
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
