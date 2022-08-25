@@ -76,9 +76,15 @@ builder.Services.AddCors(obj =>
         .AllowAnyHeader());
 });
 
+
 var app = builder.Build();
 
 app.UseCors("DefaultPolicy");
+
+app.UseCookiePolicy(new CookiePolicyOptions()
+{
+    MinimumSameSitePolicy = SameSiteMode.Lax
+});
 
 var scope = app.Services.CreateScope();
 await DataUtility.SeedDataAsync(scope.ServiceProvider);
