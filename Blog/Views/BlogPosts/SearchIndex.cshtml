@@ -33,7 +33,7 @@
                                         <div class="content-block post-list-view mt--30">
                                             <div class="post-thumbnail">
                                                 <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
-                                                        <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
+                                                    <img src="@ImageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType!, (int)DefaultImage.BlogPost)" alt="Post Images">
                                                 </a>
                                             </div>
                                             <div class="post-content">
@@ -80,10 +80,7 @@
                                                         </div>
                                                     </div>
                                                     <ul class="social-share-transparent justify-content-end">
-                                                        <li><a href="https://www.linkedin.com/in/sean-bowers/" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
-                                                        <li><a href="https://twitter.com/SeanBowersss" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                                                        <li><a href="https://join.slack.com/t/seanbowersslack/shared_invite/zt-1ehgt8jjm-cbSNl3cwgpzLw2A1lqJeOA" target="_blank"><i class="fab fa-slack"></i></a></li>
-                                                        <li><a href="#"><i class="far fa-envelope"></i></a></li>
+                                                        <li><a href="https://twitter.com/intent/tweet?url=https://www.codeandcaffeine.dev/Content/@blogPost.Slug" target="_blank"><i class="fab fa-twitter"></i></a></li>
                                                     </ul>
                                                 </div>
                                             </div>
