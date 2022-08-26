@@ -37,11 +37,10 @@ namespace Blog.Controllers
         // GET: BlogPosts
         public async Task<IActionResult> Index()
         {
-            List<BlogPost> blogPosts = new List<BlogPost>();
-
-            blogPosts = await _context.BlogPosts!
+            var blogPosts = await _context.BlogPosts!
                 .Include(b => b.Category)
                 .Include(b => b.Tags)
+                .OrderByDescending(b => b.Created)
                 .ToListAsync();
 
             return View(blogPosts);
