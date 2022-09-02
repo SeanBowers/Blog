@@ -87,7 +87,6 @@ namespace Blog.Areas.Identity.Pages.Account
                 return Page();
             }
         }
-
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)

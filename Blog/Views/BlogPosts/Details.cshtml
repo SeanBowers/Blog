@@ -79,7 +79,7 @@
                         @Model.Abstract
                     </p>
                     <figure class="wp-block-image alignwide text-center">
-                            <img src="@ImageService.ConvertByteArrayToFile(Model.ImageData!, Model.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
+                        <img src="@ImageService.ConvertByteArrayToFile(Model.ImageData!, Model.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
                     </figure>
 
                     <p>
@@ -162,6 +162,10 @@
                                                                     <a class="" href="#">
                                                                         &#8226 Delete
                                                                     </a>
+                                                                    @*<form asp-action="Delete" asp-controller="Comments" method="POST" id="delete">
+                                                        <input type="hidden" asp-for="Id" name="Id" />
+                                                        <a href="javascript:{}" onclick="document.getElementById('delete').submit();">Delete</a>
+                                                        </form>*@
                                                                 }
                                                                 else
                                                                 {
@@ -193,4 +197,5 @@
 </div>
 @section Scripts{
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script src="/js/prism.js"></script>
 }
